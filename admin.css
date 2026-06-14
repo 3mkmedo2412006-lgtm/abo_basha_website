@@ -1,0 +1,121 @@
+.admin-login-screen {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background:
+        radial-gradient(circle at top right, rgba(192, 32, 38, .16), transparent 32%),
+        linear-gradient(135deg, #0a1b35, #10294e);
+}
+
+.admin-login-card {
+    width: min(100%, 430px);
+    background: #fff;
+    border-radius: 22px;
+    padding: 32px;
+    box-shadow: 0 22px 65px rgba(0,0,0,.26);
+    text-align: center;
+}
+
+.admin-login-logo {
+    width: 82px;
+    height: 82px;
+    object-fit: contain;
+    margin-bottom: 14px;
+}
+
+.admin-login-card h1 {
+    color: var(--primary-blue);
+    font-size: 24px;
+    margin-bottom: 8px;
+    font-weight: 900;
+}
+
+.admin-login-card p {
+    color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.7;
+}
+
+.admin-login-card .form-group {
+    text-align: right;
+}
+
+.admin-login-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 16px;
+}
+
+.admin-login-error {
+    margin-top: 12px;
+    color: var(--accent-red) !important;
+    font-weight: 900;
+    min-height: 22px;
+}
+
+.item-card.product {
+    grid-template-columns: 130px 1.6fr 1.2fr 1fr 1fr auto;
+}
+
+@media (max-width: 900px) {
+    body {
+        padding: 10px;
+    }
+
+    .admin-wrapper {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .admin-header {
+        align-items: stretch;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-actions .btn,
+    .header-actions label {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 6px;
+    }
+
+    .tab-btn {
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+
+    .item-card.product,
+    .item-card.category,
+    .item-card.customer {
+        grid-template-columns: 1fr;
+    }
+
+    .img-cell .thumb {
+        width: 100%;
+        max-width: 220px;
+        height: 150px;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
