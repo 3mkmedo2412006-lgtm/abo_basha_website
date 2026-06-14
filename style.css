@@ -294,17 +294,21 @@ img { max-width: 100%; }
 .brand-alif {
     position: relative;
     display: inline-block;
-    padding-top: .32em;
+    padding-top: 0.15em;
+    margin-left: -0.04em;
+    vertical-align: baseline;
 }
 
 .tarboosh-on-alif {
     position: absolute;
-    left: 50%;
-    top: -0.6em;
-    width: 1.05em;
-    max-width: 36px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: -0.45em;
+    width: 0.85em;
+    max-width: 28px;
     height: auto;
-    transform: translateX(-50%) rotate(-6deg);
+    transform: rotate(-6deg);
     pointer-events: none;
     z-index: 3;
 }
@@ -1263,6 +1267,34 @@ button.category-card {
     transform: translateX(-50%) translateY(0);
 }
 
+/* ===== LAPTOP RESPONSIVENESS ===== */
+@media (min-width: 993px) and (max-width: 1200px) {
+    .nav-container {
+        gap: 12px;
+    }
+    .nav-links {
+        gap: 12px;
+    }
+    .nav-links a {
+        font-size: 13px;
+    }
+    .nav-brand-text h1 {
+        font-size: 18px;
+    }
+    .nav-search-box {
+        min-width: 140px;
+    }
+    .nav-phone {
+        padding: 4px 8px;
+    }
+    .phone-number {
+        font-size: 13px;
+    }
+    .phone-label {
+        font-size: 10px;
+    }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
     .top-nav {
@@ -1577,14 +1609,28 @@ button.category-card {
 }
 
 @media (max-width: 768px) {
-    .nav-search-box {
-        display: flex;
-        min-width: 150px;
-        order: -1;
+    .nav-container {
+        flex-wrap: wrap;
+        row-gap: 8px;
+        padding-top: 6px;
+        padding-bottom: 6px;
     }
 
     .nav-brand {
         gap: 8px;
+        flex: 1 1 auto;
+    }
+
+    .nav-contact {
+        flex: 0 0 auto;
+    }
+
+    .nav-search-box {
+        display: flex;
+        flex: 0 0 100%;
+        min-width: 100% !important;
+        order: 3 !important;
+        margin-top: 4px;
     }
 
     .nav-logo-icon {
@@ -1634,8 +1680,8 @@ button.category-card {
 
 @media (max-width: 480px) {
     .nav-search-box {
-        flex: 1;
-        min-width: 100px;
+        flex: 0 0 100%;
+        min-width: 100% !important;
     }
 
     .nav-search-input {

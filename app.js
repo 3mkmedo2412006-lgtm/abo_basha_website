@@ -68,6 +68,7 @@ function renderMediaData(media = {}) {
         if (!el) return;
 
         const area = areaClass ? el.closest('.' + areaClass) : null;
+        const logoIcon = el.closest('.nav-logo-icon');
 
         if (src && src.length > 10) {
             const safe = safeImageSrc(src);
@@ -76,6 +77,7 @@ function renderMediaData(media = {}) {
                 el.src = safe;
                 el.style.display = '';
                 if (area) area.classList.remove('hero-no-image');
+                if (logoIcon) logoIcon.style.display = '';
                 return;
             }
         }
@@ -83,6 +85,7 @@ function renderMediaData(media = {}) {
         el.removeAttribute('src');
         el.style.display = 'none';
         if (area) area.classList.add('hero-no-image');
+        if (logoIcon) logoIcon.style.display = 'none';
     };
 
     setImg('nav-logo-img', media.navLogo);
