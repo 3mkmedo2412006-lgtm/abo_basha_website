@@ -1,14 +1,536 @@
+/* ==================== متغيرات الأنيميشنات ====================*/
+:root {
+    --float-duration: 6s;
+    --float-distance: 10px;
+    --reveal-duration: 0.5s;
+    --reveal-delay: 0.05s;
+    --hover-lift: 16px;
+    --hover-scale: 1.01;
+    --card-stagger: 0.07s;
+}
+
+/* ==================== الأنيميشنات الأساسية ====================*/
+
+/* ظهور البطاقات مع الرفع */
 @keyframes cardReveal {
-    from { opacity: 0; transform: translateY(25px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+/* تحريك عائم سلس */
 @keyframes smoothFloating {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(calc(-1 * var(--float-distance)));
+    }
 }
 
-/* Reveal first, then float — avoids opacity:0 stuck when animations conflict */
+/* تحريك عائم متقدم مع دوران خفيف */
+@keyframes advancedFloating {
+    0% {
+        transform: translateY(0) rotateZ(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: translateY(calc(-1 * var(--float-distance))) rotateZ(0.5deg);
+    }
+    50% {
+        transform: translateY(calc(-1 * var(--float-distance) * 1.5)) rotateZ(0deg);
+    }
+    75% {
+        transform: translateY(calc(-1 * var(--float-distance))) rotateZ(-0.5deg);
+    }
+    100% {
+        transform: translateY(0) rotateZ(0deg);
+        opacity: 1;
+    }
+}
+
+/* تحريك عائم بموجة */
+@keyframes waveFloating {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    25% {
+        transform: translateY(calc(-1 * var(--float-distance))) translateX(2px);
+    }
+    50% {
+        transform: translateY(calc(-1 * var(--float-distance) * 1.2)) translateX(0);
+    }
+    75% {
+        transform: translateY(calc(-1 * var(--float-distance))) translateX(-2px);
+    }
+}
+
+/* تحريك عائم بنبض */
+@keyframes pulseFloating {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(calc(-1 * var(--float-distance))) scale(1.02);
+    }
+}
+
+/* تحريك عائم بدوران */
+@keyframes spinFloating {
+    0%, 100% {
+        transform: translateY(0) rotateZ(0deg);
+    }
+    50% {
+        transform: translateY(calc(-1 * var(--float-distance))) rotateZ(2deg);
+    }
+}
+
+/* تحريك عائم بارتجاج */
+@keyframes bounceFloating {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(calc(-1 * var(--float-distance) * 0.5));
+    }
+    50% {
+        transform: translateY(calc(-1 * var(--float-distance) * 1.5));
+    }
+    75% {
+        transform: translateY(calc(-1 * var(--float-distance) * 0.8));
+    }
+}
+
+/* ظهور مع انزلاق لأسفل */
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ظهور مع انزلاق لليمين */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ظهور مع انزلاق لليسار */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ظهور مع انزلاق لأعلى */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ظهور بسيط */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* تأثير السعر - قفزة */
+@keyframes pricePop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* تأثير السعر - دوران */
+@keyframes priceRotate {
+    0% {
+        transform: scale(1) rotateZ(0deg);
+    }
+    50% {
+        transform: scale(1.1) rotateZ(5deg);
+    }
+    100% {
+        transform: scale(1) rotateZ(0deg);
+    }
+}
+
+/* تأثير السعر - وميض */
+@keyframes priceFlash {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+/* تأثير السعر - نبض */
+@keyframes pricePulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.03);
+    }
+}
+
+/* تأثير الزر - نبض */
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(184, 29, 36, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(184, 29, 36, 0);
+    }
+}
+
+/* تأثير الزر - ارتفاع */
+@keyframes buttonLift {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* تأثير الزر - توهج */
+@keyframes buttonGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(184, 29, 36, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(184, 29, 36, 0.8);
+    }
+}
+
+/* تأثير الإشعار - انزلاق من الأسفل */
+@keyframes notificationSlide {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثير الإشعار - اهتزاز */
+@keyframes notificationShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* تأثير الإشعار - انزلاق من الأعلى */
+@keyframes notificationSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثير التحميل - دوران */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* تأثير التحميل - نبض */
+@keyframes loadingPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* تأثير التحميل - نقاط */
+@keyframes loadingDots {
+    0%, 20%, 50%, 80%, 100% {
+        opacity: 1;
+    }
+    40% {
+        opacity: 0.5;
+    }
+    60% {
+        opacity: 0.3;
+    }
+}
+
+/* تأثير البحث - توهج */
+@keyframes searchGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(184, 29, 36, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(184, 29, 36, 0);
+    }
+}
+
+/* تأثير الفئة - تكبير */
+@keyframes categoryZoom {
+    from {
+        transform: scale(0.95);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* تأثير الفيديو - تشغيل */
+@keyframes videoPlay {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* تأثير الطلب - إضافة */
+@keyframes orderAdd {
+    0% {
+        opacity: 0;
+        transform: translateX(20px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* تأثير الطلب - حذف */
+@keyframes orderRemove {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-20px) scale(0.9);
+    }
+}
+
+/* تأثير الخطأ - اهتزاز */
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* تأثير الخطأ - توهج أحمر */
+@keyframes errorGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(196, 30, 58, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(196, 30, 58, 0);
+    }
+}
+
+/* تأثير النجاح - علامة صح */
+@keyframes successCheck {
+    0% {
+        transform: scale(0) rotate(-45deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* تأثير النجاح - توهج أخضر */
+@keyframes successGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(36, 161, 72, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(36, 161, 72, 0);
+    }
+}
+
+/* تأثير التحديث - دوران */
+@keyframes refreshSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* تأثير التحديث - نبض */
+@keyframes refreshPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+/* تأثير الزجاج المتجمد */
+@keyframes frostedGlass {
+    0% {
+        backdrop-filter: blur(0px);
+        opacity: 0;
+    }
+    100% {
+        backdrop-filter: blur(10px);
+        opacity: 1;
+    }
+}
+
+/* تأثير الظل المتحرك */
+@keyframes shadowMove {
+    0%, 100% {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* تأثير الألوان المتغيرة */
+@keyframes colorShift {
+    0% {
+        color: #0d1b3e;
+    }
+    50% {
+        color: #b81d24;
+    }
+    100% {
+        color: #0d1b3e;
+    }
+}
+
+/* تأثير الحدود المتحركة */
+@keyframes borderMove {
+    0% {
+        border-color: #0d1b3e;
+    }
+    50% {
+        border-color: #b81d24;
+    }
+    100% {
+        border-color: #0d1b3e;
+    }
+}
+
+/* تأثير الخلفية المتحركة */
+@keyframes backgroundShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* تأثير النص المتوهج */
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px rgba(184, 29, 36, 0.5);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(184, 29, 36, 0.8);
+    }
+}
+
+/* تأثير الحركة الموجية */
+@keyframes waveMotion {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-5px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+    75% {
+        transform: translateY(5px);
+    }
+}
+
+/* ==================== تطبيق الأنيميشنات على البطاقات ====================*/
+
+/* البطاقات العائمة الأساسية */
 .price-card.anti-gravity-card {
     animation:
         cardReveal 0.5s ease-out forwards,
@@ -16,6 +538,47 @@
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
 }
 
+/* البطاقات العائمة المتقدمة */
+.price-card.anti-gravity-advanced {
+    animation:
+        cardReveal 0.5s ease-out forwards,
+        advancedFloating 8s ease-in-out 0.55s infinite;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+}
+
+/* البطاقات العائمة بموجة */
+.price-card.anti-gravity-wave {
+    animation:
+        cardReveal 0.5s ease-out forwards,
+        waveFloating 7s ease-in-out 0.55s infinite;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+}
+
+/* البطاقات العائمة بنبض */
+.price-card.anti-gravity-pulse {
+    animation:
+        cardReveal 0.5s ease-out forwards,
+        pulseFloating 5s ease-in-out 0.55s infinite;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+}
+
+/* البطاقات العائمة بدوران */
+.price-card.anti-gravity-spin {
+    animation:
+        cardReveal 0.5s ease-out forwards,
+        spinFloating 7s ease-in-out 0.55s infinite;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+}
+
+/* البطاقات العائمة بارتجاج */
+.price-card.anti-gravity-bounce {
+    animation:
+        cardReveal 0.5s ease-out forwards,
+        bounceFloating 4s ease-in-out 0.55s infinite;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+}
+
+/* تأخير الأنيميشن لكل بطاقة */
 .price-card.anti-gravity-card:nth-child(1)  { animation-delay: 0.05s, 0.60s; }
 .price-card.anti-gravity-card:nth-child(2)  { animation-delay: 0.12s, 0.67s; }
 .price-card.anti-gravity-card:nth-child(3)  { animation-delay: 0.19s, 0.74s; }
@@ -34,38 +597,475 @@
 .price-card.anti-gravity-card:nth-child(16) { animation-delay: 1.10s, 1.65s; }
 .price-card.anti-gravity-card:nth-child(17) { animation-delay: 1.17s, 1.72s; }
 
+/* تأخير الأنيميشن للبطاقات المتقدمة */
+.price-card.anti-gravity-advanced:nth-child(1)  { animation-delay: 0.05s, 0.60s; }
+.price-card.anti-gravity-advanced:nth-child(2)  { animation-delay: 0.12s, 0.67s; }
+.price-card.anti-gravity-advanced:nth-child(3)  { animation-delay: 0.19s, 0.74s; }
+.price-card.anti-gravity-advanced:nth-child(4)  { animation-delay: 0.26s, 0.81s; }
+.price-card.anti-gravity-advanced:nth-child(5)  { animation-delay: 0.33s, 0.88s; }
+.price-card.anti-gravity-advanced:nth-child(6)  { animation-delay: 0.40s, 0.95s; }
+.price-card.anti-gravity-advanced:nth-child(7)  { animation-delay: 0.47s, 1.02s; }
+.price-card.anti-gravity-advanced:nth-child(8)  { animation-delay: 0.54s, 1.09s; }
+
+/* تأخير الأنيميشن للبطاقات الموجية */
+.price-card.anti-gravity-wave:nth-child(1)  { animation-delay: 0.05s, 0.60s; }
+.price-card.anti-gravity-wave:nth-child(2)  { animation-delay: 0.12s, 0.67s; }
+.price-card.anti-gravity-wave:nth-child(3)  { animation-delay: 0.19s, 0.74s; }
+.price-card.anti-gravity-wave:nth-child(4)  { animation-delay: 0.26s, 0.81s; }
+.price-card.anti-gravity-wave:nth-child(5)  { animation-delay: 0.33s, 0.88s; }
+.price-card.anti-gravity-wave:nth-child(6)  { animation-delay: 0.40s, 0.95s; }
+
+/* تأثير التحويم على البطاقات العائمة */
 .anti-gravity-card:hover {
     animation-play-state: paused, paused;
     transform: translateY(-16px) scale(1.01);
     box-shadow: 0 25px 45px rgba(15, 42, 74, 0.15);
 }
 
-.price-card:hover .price-number { animation: pricePop 0.4s ease; }
-@keyframes pricePop { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
-
-.section-title { opacity: 0; animation: fadeSlideDown 0.6s ease-out 0.1s forwards; }
-@keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
-
-.order-box-standalone {
-    opacity: 0;
-    animation: cardReveal 0.7s ease-out 0.3s forwards;
+.anti-gravity-advanced:hover {
+    animation-play-state: paused, paused;
+    transform: translateY(-16px) scale(1.02);
+    box-shadow: 0 30px 50px rgba(15, 42, 74, 0.2);
 }
 
-.order-item-row { animation: slideIn 0.3s ease-out; }
-@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+.anti-gravity-wave:hover {
+    animation-play-state: paused, paused;
+    transform: translateY(-16px) scale(1.01);
+    box-shadow: 0 25px 45px rgba(15, 42, 74, 0.15);
+}
 
-.btn-submit-order { transition: transform 0.25s ease, box-shadow 0.25s ease; }
-.btn-submit-order:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(192, 32, 38, 0.3); }
+.anti-gravity-pulse:hover {
+    animation-play-state: paused, paused;
+    transform: translateY(-16px) scale(1.03);
+    box-shadow: 0 25px 45px rgba(15, 42, 74, 0.15);
+}
+
+.anti-gravity-spin:hover {
+    animation-play-state: paused, paused;
+    transform: translateY(-16px) scale(1.01) rotateZ(5deg);
+    box-shadow: 0 25px 45px rgba(15, 42, 74, 0.15);
+}
+
+.anti-gravity-bounce:hover {
+    animation-play-state: paused, paused;
+    transform: translateY(-16px) scale(1.01);
+    box-shadow: 0 25px 45px rgba(15, 42, 74, 0.15);
+}
+
+/* ==================== تأثيرات السعر ====================*/
+
+.price-card:hover .price-number {
+    animation: pricePop 0.4s ease;
+}
+
+.price-card.price-rotate:hover .price-number {
+    animation: priceRotate 0.5s ease;
+}
+
+.price-card.price-flash:hover .price-number {
+    animation: priceFlash 0.6s ease;
+}
+
+.price-card.price-pulse:hover .price-number {
+    animation: pricePulse 0.8s ease;
+}
+
+/* ==================== تأثيرات الأزرار ====================*/
+
+.btn-submit-order {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn-submit-order:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(192, 32, 38, 0.3);
+}
+
+.btn-submit-order.pulse:hover {
+    animation: buttonPulse 1s ease-out;
+}
+
+.btn-submit-order.lift:hover {
+    animation: buttonLift 0.6s ease-in-out;
+}
+
+.btn-submit-order.glow:hover {
+    animation: buttonGlow 1s ease-in-out;
+}
+
+/* ==================== تأثيرات الإشعارات ====================*/
 
 .toast-notification {
-    position: fixed; bottom: 2rem; left: 50%;
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: #ffffff; border: 1px solid #e2e8f0; color: #2d3748;
-    padding: 12px 24px; border-radius: 12px;
-    font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 14px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-    z-index: 1000; opacity: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #2d3748;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+    opacity: 0;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     pointer-events: none;
 }
-.toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+    animation: notificationSlide 0.4s ease-out;
+}
+
+.toast-notification.shake {
+    animation: notificationShake 0.5s ease-in-out;
+}
+
+.toast-notification.slide-down {
+    animation: notificationSlideDown 0.4s ease-out;
+}
+
+/* ==================== تأثيرات الفئات ====================*/
+
+.category-card {
+    animation: categoryZoom 0.5s ease-out;
+}
+
+.category-card:hover {
+    animation: none;
+}
+
+/* ==================== تأثيرات الفيديوهات ====================*/
+
+.video-card {
+    animation: cardReveal 0.5s ease-out;
+}
+
+.video-play-btn {
+    animation: videoPlay 0.3s ease-out;
+}
+
+.video-card:hover .video-play-btn {
+    animation: buttonPulse 1s ease-out infinite;
+}
+
+/* ==================== تأثيرات الطلبيات ====================*/
+
+.order-item-row {
+    animation: orderAdd 0.3s ease-out;
+}
+
+.order-item-row.removing {
+    animation: orderRemove 0.3s ease-out forwards;
+}
+
+/* ==================== تأثيرات الأخطاء ====================*/
+
+.form-group input:invalid,
+.form-group textarea:invalid {
+    animation: errorShake 0.4s ease-in-out;
+    border-color: #c41e3a;
+}
+
+.form-group input:invalid:focus,
+.form-group textarea:invalid:focus {
+    animation: errorGlow 1s ease-out;
+}
+
+.error-message {
+    animation: slideUp 0.3s ease-out;
+    color: #c41e3a;
+}
+
+/* ==================== تأثيرات النجاح ====================*/
+
+.success-message {
+    animation: slideUp 0.3s ease-out;
+    color: #24a148;
+}
+
+.success-icon {
+    animation: successCheck 0.5s ease-out;
+}
+
+.success-input:focus {
+    animation: successGlow 1s ease-out;
+}
+
+/* ==================== تأثيرات التحديث ====================*/
+
+.refresh-icon {
+    animation: refreshSpin 1s linear infinite;
+}
+
+.refresh-icon.active {
+    animation: refreshSpin 0.6s linear infinite;
+}
+
+.refresh-icon.pulse {
+    animation: refreshPulse 1.5s ease-in-out infinite;
+}
+
+/* ==================== تأثيرات التحميل ====================*/
+
+.loading {
+    animation: spin 1s linear infinite;
+}
+
+.loading-pulse {
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+.loading-dots {
+    animation: loadingDots 1.4s ease-in-out infinite;
+}
+
+/* ==================== تأثيرات البحث ====================*/
+
+.search-input:focus {
+    animation: searchGlow 0.6s ease-out;
+}
+
+/* ==================== تأثيرات متقدمة ====================*/
+
+/* زجاج متجمد */
+.frosted-glass {
+    animation: frostedGlass 0.5s ease-out;
+}
+
+/* ظل متحرك */
+.shadow-move {
+    animation: shadowMove 3s ease-in-out infinite;
+}
+
+/* ألوان متغيرة */
+.color-shift {
+    animation: colorShift 3s ease-in-out infinite;
+}
+
+/* حدود متحركة */
+.border-move {
+    animation: borderMove 2s ease-in-out infinite;
+}
+
+/* خلفية متحركة */
+.background-shift {
+    background-size: 200% 200%;
+    animation: backgroundShift 3s ease-in-out infinite;
+}
+
+/* نص متوهج */
+.text-glow {
+    animation: textGlow 2s ease-in-out infinite;
+}
+
+/* حركة موجية */
+.wave-motion {
+    animation: waveMotion 2s ease-in-out infinite;
+}
+
+/* ==================== الاستجابة ====================*/
+
+@media (max-width: 768px) {
+    .price-card.anti-gravity-card,
+    .price-card.anti-gravity-advanced,
+    .price-card.anti-gravity-wave,
+    .price-card.anti-gravity-pulse,
+    .price-card.anti-gravity-spin,
+    .price-card.anti-gravity-bounce {
+        animation: cardReveal 0.5s ease-out forwards !important;
+    }
+
+    .anti-gravity-card:hover,
+    .anti-gravity-advanced:hover,
+    .anti-gravity-wave:hover,
+    .anti-gravity-pulse:hover,
+    .anti-gravity-spin:hover,
+    .anti-gravity-bounce:hover {
+        animation-play-state: running !important;
+        transform: translateY(-8px) scale(1) !important;
+    }
+
+    :root {
+        --float-distance: 5px;
+        --hover-lift: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .toast-notification {
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        transform: translateX(0) translateY(100px);
+    }
+
+    .toast-notification.show {
+        transform: translateX(0) translateY(0);
+    }
+
+    :root {
+        --float-distance: 3px;
+        --hover-lift: 4px;
+    }
+}
+
+/* ==================== دعم الحركة المنخفضة ====================*/
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .price-card.anti-gravity-card,
+    .price-card.anti-gravity-advanced,
+    .price-card.anti-gravity-wave,
+    .price-card.anti-gravity-pulse,
+    .price-card.anti-gravity-spin,
+    .price-card.anti-gravity-bounce {
+        animation: cardReveal 0.5s ease-out forwards !important;
+    }
+}
+
+/* ==================== متغيرات الأنيميشنات المتقدمة ====================*/
+
+/* أنيميشن سريعة */
+.animation-fast {
+    animation-duration: 0.3s;
+}
+
+/* أنيميشن بطيئة */
+.animation-slow {
+    animation-duration: 1s;
+}
+
+/* أنيميشن متوسطة */
+.animation-normal {
+    animation-duration: 0.6s;
+}
+
+/* تأخير الأنيميشن */
+.animation-delay-1 { animation-delay: 0.1s; }
+.animation-delay-2 { animation-delay: 0.2s; }
+.animation-delay-3 { animation-delay: 0.3s; }
+.animation-delay-4 { animation-delay: 0.4s; }
+.animation-delay-5 { animation-delay: 0.5s; }
+.animation-delay-6 { animation-delay: 0.6s; }
+.animation-delay-7 { animation-delay: 0.7s; }
+.animation-delay-8 { animation-delay: 0.8s; }
+
+/* ==================== فئات مساعدة ====================*/
+
+/* إيقاف الأنيميشن */
+.animation-none {
+    animation: none !important;
+}
+
+/* تشغيل الأنيميشن */
+.animation-running {
+    animation-play-state: running !important;
+}
+
+/* إيقاف الأنيميشن مؤقتاً */
+.animation-paused {
+    animation-play-state: paused !important;
+}
+
+/* ==================== تأثيرات إضافية ====================*/
+
+/* توهج الحدود */
+@keyframes borderGlow {
+    0%, 100% {
+        border-color: #0d1b3e;
+        box-shadow: 0 0 5px rgba(13, 27, 62, 0.3);
+    }
+    50% {
+        border-color: #b81d24;
+        box-shadow: 0 0 15px rgba(184, 29, 36, 0.5);
+    }
+}
+
+.border-glow {
+    animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* توهج الخلفية */
+@keyframes backgroundGlow {
+    0%, 100% {
+        background-color: rgba(13, 27, 62, 0.05);
+    }
+    50% {
+        background-color: rgba(184, 29, 36, 0.1);
+    }
+}
+
+.background-glow {
+    animation: backgroundGlow 2s ease-in-out infinite;
+}
+
+/* دوران بطيء */
+@keyframes slowSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.slow-spin {
+    animation: slowSpin 3s linear infinite;
+}
+
+/* دوران سريع */
+@keyframes fastSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fast-spin {
+    animation: fastSpin 0.5s linear infinite;
+}
+
+/* نبض قوي */
+@keyframes strongPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
+
+.strong-pulse {
+    animation: strongPulse 1s ease-in-out infinite;
+}
+
+/* نبض خفيف */
+@keyframes lightPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+}
+
+.light-pulse {
+    animation: lightPulse 2s ease-in-out infinite;
+}

@@ -3,489 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مجموعة أبو باشا للثروة الداجنة ومستلزمات المزارع — كتاكيت، بط، رومي، وز، سمان، أعلاف وأدوية بيطرية. أسعار يومية محدثة، توصيل لجميع المحافظات، الشرقية فاقوس.">
-    <meta name="keywords" content="دواجن, كتاكيت, أبو باشا, أسعار الدواجن, ثروة داجنة, مستلزمات مزارع, الشرقية, فاقوس, بورصة الكتاكيت">
-    <meta name="author" content="مجموعة أبو باشا">
-    <meta name="theme-color" content="#0a1b35">
+    <meta name="description" content="مجموعة أبو باشا - متخصصة في الدواجن والأعلاف ومستلزمات المزارع">
+    <meta name="keywords" content="دواجن, أعلاف, مزارع, كتاكيت, بط, رومي, وز, سمان">
+    <meta name="theme-color" content="#0d1b3e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="ar_EG">
-    <meta property="og:title" content="مجموعة أبو باشا للثروة الداجنة ومستلزمات المزارع">
-    <meta property="og:description" content="أسعار يومية محدثة للدواجن والأعلاف — جودة، ثقة، أمانة. تواصل واطلب عبر واتساب.">
-    <meta property="og:image" content="assets/tarboosh.png">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d1b3e' width='100' height='100' rx='20'/><text x='50' y='75' font-size='60' text-anchor='middle' fill='white'>🐔</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d1b3e' width='100' height='100' rx='20'/><text x='50' y='75' font-size='60' text-anchor='middle' fill='white'>🐔</text></svg>">
 
-    <meta name="twitter:card" content="summary">
-
-    <link rel="icon" href="assets/tarboosh.png" type="image/png">
-    <link rel="apple-touch-icon" href="assets/tarboosh.png">
-
-    <title>مجموعة أبو باشا للثروة الداجنة ومستلزمات المزارع</title>
+    <title>مجموعة أبو باشا - الدواجن والأعلاف ومستلزمات المزارع</title>
 
     <!-- Fonts + Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- CSS files: must be beside index.html -->
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="antigravity.css">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
 </head>
 
-<body id="top">
-<a href="#main-content" class="skip-link">تخطي إلى المحتوى</a>
+<body>
 
-<nav class="top-nav" aria-label="القائمة الرئيسية">
-    <div class="container nav-container">
-        <div class="nav-brand">
-            <div class="nav-logo-icon">
-                <img id="nav-logo-img" src="" alt="مجموعة أبو باشا" class="brand-img">
-            </div>
-            <div class="nav-brand-text">
+<!-- شريط التنقل -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="#" class="nav-brand">
+            <span style="font-size: 24px;">🐔</span>
+            <div>
                 <h1>مجموعة أبو باشا</h1>
-                <p>للدواجن والأعلاف</p>
+                <p>الدواجن والأعلاف ومستلزمات المزارع</p>
             </div>
-        </div>
+        </a>
 
-        <ul class="nav-links">
-            <li><a href="#top" class="active">الرئيسية</a></li>
-            <li><a href="#about">من نحن</a></li>
-            <li><a href="#categories">المنتجات</a></li>
-            <li><a href="#prices">أسعار اليوم</a></li>
-            <li><a href="#order-section">الطلبيات</a></li>
-            <li><a href="#contact">تواصل معنا</a></li>
-            <li>
-                <a href="#" class="nav-facebook-link js-facebook-link" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                    فيسبوك
+        <button class="menu-toggle" type="button">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#home" class="nav-link active">
+                    <i class="fas fa-home"></i> الرئيسية
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#categories" class="nav-link">
+                    <i class="fas fa-list"></i> المنتجات
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#prices" class="nav-link">
+                    <i class="fas fa-tag"></i> الأسعار
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#videos" class="nav-link">
+                    <i class="fas fa-video"></i> الفيديوهات
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#orders" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i> الطلبيات
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#contact" class="nav-link">
+                    <i class="fas fa-phone"></i> التواصل
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="admin.html" class="nav-link" style="color: #b81d24; font-weight: 700;">
+                    <i class="fas fa-cog"></i> لوحة التحكم
                 </a>
             </li>
         </ul>
-
-        <div class="nav-search-box" style="flex: 0 1 auto; min-width: 180px;">
-            <input type="text" id="nav-search-input" class="nav-search-input" placeholder="ابحث عن منتج..." aria-label="البحث عن منتج">
-            <div class="search-results-dropdown" id="search-results-dropdown" style="display:none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; max-height: 300px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
-        </div>
-
-        <div class="nav-contact">
-            <div class="nav-social">
-                <a href="#" class="js-whatsapp-link" target="_blank" rel="noopener noreferrer" title="واتساب" aria-label="تواصل عبر واتساب">
-                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                </a>
-                <a href="#" class="js-facebook-link" target="_blank" rel="noopener noreferrer" title="فيسبوك" aria-label="تابعنا على فيسبوك">
-                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                </a>
-            </div>
-
-            <a href="#" class="nav-phone js-tel-primary">
-                <span class="phone-label">اتصل بنا</span>
-                <span class="phone-number js-primary-phone-display">010 0188 7670</span>
-            </a>
-
-            <button type="button" class="nav-toggle" id="nav-toggle" aria-label="فتح القائمة" aria-expanded="false" aria-controls="nav-mobile-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </div>
-
-    <div class="nav-mobile-menu" id="nav-mobile-menu">
-        <a href="#top">الرئيسية</a>
-        <a href="#about">من نحن</a>
-        <a href="#categories">المنتجات</a>
-        <a href="#prices">أسعار اليوم</a>
-        <a href="#order-section">الطلبيات</a>
-        <a href="#contact">تواصل معنا</a>
-        <a href="#" class="js-facebook-link" target="_blank" rel="noopener noreferrer">
-            <i class="fab fa-facebook-f" aria-hidden="true"></i>
-            تابعنا على فيسبوك
-        </a>
     </div>
 </nav>
 
-<main id="main-content">
-    <header class="hero-section">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <div class="hero-heading">
-                    <p class="hero-group-label">مجموعة</p>
-
-                    <h1 class="hero-brand-title" aria-label="أبو باشا">
-                        <span class="brand-name">
-                            <span class="alif-with-tarboosh brand-alif">
-                                <span class="alif-char">أ</span>
-                                <img src="assets/tarboosh.png" alt="" class="tarboosh-on-alif" aria-hidden="true">
-                            </span>بو باشا
-                        </span>
-                    </h1>
-                </div>
-
-                <h2 class="hero-subtitle">للثروة الداجنة ومستلزمات المزارع</h2>
-
-                <div class="hero-features">
-                    <div class="h-feature">
-                        <i class="fas fa-users h-feat-icon"></i>
-                        <span>بيع جملة<br>وقطاعي</span>
-                    </div>
-                    <div class="h-feature">
-                        <i class="fas fa-award h-feat-icon"></i>
-                        <span>أفضل جودة<br>في السوق</span>
-                    </div>
-                    <div class="h-feature">
-                        <i class="fas fa-truck-fast h-feat-icon"></i>
-                        <span>توصيل سريع<br>لجميع المحافظات</span>
-                    </div>
-                </div>
-
-                <div class="hero-buttons">
-                    <a href="#" class="btn-whatsapp js-whatsapp-link" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                        تواصل عبر واتساب
-                    </a>
-                    <a href="#prices" class="btn-prices">
-                        <i class="fas fa-chart-line"></i>
-                        أسعار اليوم
-                    </a>
-                    <a href="#order-section" class="btn-order-hero">
-                        <i class="fas fa-shopping-cart"></i>
-                        اطلب الآن
-                    </a>
-                </div>
+<!-- الهيرو -->
+<section id="home" class="hero">
+    <div class="hero-content">
+        <h2>🐔 مرحباً بك في مجموعة أبو باشا</h2>
+        <p>متخصصون في توفير أفضل الدواجن والأعلاف ومستلزمات المزارع بأسعار منافسة وجودة عالية</p>
+        
+        <div class="hero-values">
+            <div class="value-item">
+                <div class="value-icon">✨</div>
+                <div class="value-text">جودة</div>
             </div>
-
-            <div class="hero-image-area hero-no-image">
-                <img id="hero-main-img" src="" alt="مجموعة أبو باشا — الثروة الداجنة ومستلزمات المزارع" class="hero-main-img" decoding="async">
-
-                <div class="hero-corner-values" aria-label="قيم مجموعة أبو باشا">
-                    <span>جودة</span>
-                    <span>ثقة</span>
-                    <span>أمانة</span>
-                </div>
+            <div class="value-item">
+                <div class="value-icon">🤝</div>
+                <div class="value-text">ثقة</div>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">🛡️</div>
+                <div class="value-text">أمانة</div>
             </div>
         </div>
 
-        <div class="quality-stripe">
-            <div class="container quality-stripe-inner">
-                <div class="qs-item"><i class="fas fa-medal"></i><span>جودة عالية</span></div>
-                <div class="qs-divider">◆</div>
-                <div class="qs-item"><i class="fas fa-handshake"></i><span>ثقة العملاء</span></div>
-                <div class="qs-divider">◆</div>
-                <div class="qs-item"><i class="fas fa-shield-halved"></i><span>أمانة كاملة</span></div>
-                <div class="qs-divider">◆</div>
-                <div class="qs-item"><i class="fas fa-tags"></i><span>أفضل سعر</span></div>
-            </div>
+        <div class="hero-buttons">
+            <a href="#prices" class="btn btn-primary">
+                <i class="fas fa-eye"></i> عرض الأسعار
+            </a>
+            <a href="#contact" class="btn btn-secondary">
+                <i class="fas fa-phone"></i> تواصل معنا
+            </a>
         </div>
-    </header>
+    </div>
+</section>
 
-    <section id="about" class="about-section">
-        <div class="container">
-            <div class="section-header about-header">
-                <h2 class="section-title about-title">
-                    <span class="diamond">◆</span>
-                    من نحن
-                    <span class="diamond">◆</span>
-                </h2>
-                <p class="about-tagline">شريكك الموثوق في الثروة الداجنة ومستلزمات المزارع</p>
-            </div>
+<!-- الفئات -->
+<section id="categories" class="section">
+    <div class="section-header">
+        <h2>📦 فئات المنتجات</h2>
+        <p>اختر الفئة التي تريدها لعرض جميع المنتجات</p>
+    </div>
 
-            <div class="about-showcase">
-                <div class="about-panel about-panel-brand">
-                    <div class="about-panel-inner">
-                        <div class="about-brand-badge" aria-hidden="true">
-                            <span class="about-badge-ring"></span>
-                            <span class="about-badge-text">أبو<br>باشا</span>
-                        </div>
+    <div class="categories-grid"></div>
+</section>
 
-                        <h3>مجموعة أبو باشا</h3>
-                        <p class="about-since">جودة · ثقة · أمانة</p>
+<!-- البحث والأسعار -->
+<section id="prices" class="section">
+    <div class="section-header">
+        <h2>💰 أسعار اليوم</h2>
+        <p>أحدث الأسعار والعروض الخاصة</p>
+    </div>
 
-                        <ul class="about-highlights">
-                            <li><i class="fas fa-check-circle"></i> خبرة في السوق المصري</li>
-                            <li><i class="fas fa-check-circle"></i> أسعار يومية محدثة</li>
-                            <li><i class="fas fa-check-circle"></i> خدمة عملاء متميزة</li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="🔍 ابحث عن منتج...">
+        <div class="search-results"></div>
+    </div>
 
-                <div class="about-panel about-panel-story">
-                    <p class="about-lead">
-                        نحن شركة متخصصة في <strong>الثروة الداجنة</strong> و<strong>مستلزمات المزارع</strong>،
-                        نقدم كتاكيت وبط ورومي ووز وسمان بأعلى جودة، إلى جانب الأعلاف والأدوية البيطرية وكل ما يحتاجه المربي.
-                    </p>
+    <div class="products-grid"></div>
+</section>
 
-                    <p class="about-desc">
-                        من مقرنا في <strong>الشرقية — فاقوس</strong> نخدم المزارعين والتجار في جميع أنحاء الجمهورية،
-                        بأسعار تنافسية وتوصيل سريع يلبي احتياجاتكم اليومية.
-                    </p>
+<!-- الفيديوهات -->
+<section id="videos" class="section">
+    <div class="section-header">
+        <h2>🎥 الفيديوهات التعليمية</h2>
+        <p>تعلم أفضل الممارسات في تربية الدواجن</p>
+    </div>
 
-                    <div class="about-stats">
-                        <div class="about-stat">
-                            <span class="about-stat-icon"><i class="fas fa-kiwi-bird"></i></span>
-                            <span class="about-stat-label">أصناف دواجن متنوعة</span>
-                        </div>
-                        <div class="about-stat">
-                            <span class="about-stat-icon"><i class="fas fa-truck-fast"></i></span>
-                            <span class="about-stat-label">توصيل لكل المحافظات</span>
-                        </div>
-                        <div class="about-stat">
-                            <span class="about-stat-icon"><i class="fas fa-hand-holding-dollar"></i></span>
-                            <span class="about-stat-label">جملة وقطاعي</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="videos-grid"></div>
+</section>
+
+<!-- الطلبيات -->
+<section id="orders" class="orders-section">
+    <div class="orders-container">
+        <div class="section-header">
+            <h2>🛒 الطلبيات</h2>
+            <p>أضف المنتجات وأرسل طلبك عبر واتساب</p>
         </div>
-    </section>
 
-    <section id="prices" class="prices-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="diamond">◆</span>
-                    أسعار اليوم
-                    <span class="diamond">◆</span>
-                </h2>
-                <p id="today-date" class="date-display"></p>
-            </div>
-
-            <div class="cards-grid" id="prices-container"></div>
-        </div>
-    </section>
-
-    <section id="categories" class="categories-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="diamond">◆</span>
-                    منتجاتنا
-                    <span class="diamond">◆</span>
-                </h2>
-            </div>
-
-            <div class="categories-grid" id="categories-container"></div>
-        </div>
-    </section>
-
-    <section class="features-banner">
-        <div class="container">
-            <div class="features-banner-grid">
-                <div class="f-banner-item">
-                    <i class="fas fa-award f-icon"></i>
-                    <div class="f-text">
-                        <h4>جودة عالية</h4>
-                        <p>منتجات مضمونة 100%</p>
-                    </div>
-                </div>
-                <div class="f-banner-item">
-                    <i class="fas fa-hand-holding-dollar f-icon"></i>
-                    <div class="f-text">
-                        <h4>أسعار تنافسية</h4>
-                        <p>أفضل الأسعار في السوق</p>
-                    </div>
-                </div>
-                <div class="f-banner-item">
-                    <i class="fas fa-truck-fast f-icon"></i>
-                    <div class="f-text">
-                        <h4>توصيل سريع</h4>
-                        <p>خدمة توصيل لجميع المحافظات</p>
-                    </div>
-                </div>
-                <div class="f-banner-item">
-                    <i class="fas fa-headset f-icon"></i>
-                    <div class="f-text">
-                        <h4>دعم فني</h4>
-                        <p>خدمة عملاء على مدار الساعة</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="order-section" class="order-only-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="diamond">◆</span>
-                    الطلبيات
-                    <span class="diamond">◆</span>
-                </h2>
-                <p class="date-display">اختر الفئة المطلوبة ثم أضف المنتجات</p>
-            </div>
-
-            <div class="order-categories-tabs" id="order-categories-tabs" style="margin-bottom: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;"></div>
-
-            <div class="order-box-standalone">
-                <form id="whatsapp-order-form" aria-label="نموذج الطلب عبر واتساب">
-                    <div class="form-row-1">
-                        <input type="text" id="customer-code" inputmode="text" placeholder="كود العميل (اختياري - لملء بياناتك تلقائياً)">
+        <div class="orders-grid">
+            <!-- نموذج الطلب -->
+            <div class="order-form-container">
+                <h3>📝 بيانات الطلب</h3>
+                <form id="order-form">
+                    <div class="form-group">
+                        <label for="customer-name">الاسم</label>
+                        <input type="text" id="customer-name" placeholder="أدخل اسمك" required>
                     </div>
 
-                    <div class="form-row-2">
-                        <input type="text" id="customer-name" placeholder="الاسم بالكامل" required>
-                        <input type="tel" id="customer-phone" inputmode="tel" placeholder="رقم الهاتف" required>
+                    <div class="form-group">
+                        <label for="customer-phone">رقم الهاتف</label>
+                        <input type="tel" id="customer-phone" placeholder="01xxxxxxxxx" required>
                     </div>
 
-                    <div class="form-row-1">
-                        <input type="text" id="customer-address" placeholder="العنوان بالتفصيل" required>
+                    <div class="form-group">
+                        <label for="customer-address">العنوان</label>
+                        <textarea id="customer-address" placeholder="أدخل عنوانك بالتفصيل" rows="3" required></textarea>
                     </div>
-
-                    <div id="dynamic-items-container">
-                        <div class="order-item-row">
-                            <select class="product-select" required>
-                                <option value="" disabled selected>المنتج</option>
-                            </select>
-
-                            <input type="text" class="product-qty" inputmode="numeric" placeholder="الكمية" required>
-                        </div>
-                    </div>
-
-                    <div id="order-summary" class="order-summary" aria-live="polite" style="margin-top:12px;padding:10px;background:#fff;border-radius:6px;display:none;">
-                        <strong>ملخص الطلب:</strong>
-                        <div id="order-summary-lines" style="margin-top:6px;font-size:14px;color:#0f172a;"></div>
-                        <div id="order-summary-total" style="margin-top:8px;font-weight:700;color:#0a1b35;"></div>
-                    </div>
-
-                    <button type="button" id="add-item-btn" class="btn-outline-primary" aria-label="إضافة منتج آخر">
-                        + إضافة منتج آخر
-                    </button>
-
-                    <button type="submit" class="btn-submit-order">
-                        إرسال الطلب
-                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                    </button>
                 </form>
             </div>
+
+            <!-- قائمة الطلبيات -->
+            <div class="orders-list-container">
+                <h3>📋 قائمة الطلبيات</h3>
+                <div class="orders-list"></div>
+            </div>
         </div>
-    </section>
-</main>
+    </div>
+</section>
 
-<footer id="contact" class="main-footer-new">
-    <div class="container footer-grid">
-        <div class="footer-col footer-brand">
-            <div class="footer-logo">
-                <img id="footer-logo-img" src="" alt="مجموعة أبو باشا">
+<!-- الاشتراك -->
+<section class="section" style="background: linear-gradient(135deg, #0d1b3e 0%, #1a2d5a 100%); color: white;">
+    <div class="section-header" style="color: white;">
+        <h2>📬 اشترك في قائمة التحديثات</h2>
+        <p>احصل على أحدث الأسعار والعروض مباشرة على هاتفك</p>
+    </div>
 
-                <div class="f-brand-text">
-                    <h3>مجموعة أبو باشا</h3>
-                    <p>للدواجن والأعلاف</p>
-                </div>
-            </div>
+    <form id="subscription-form" style="max-width: 500px; margin: 0 auto;">
+        <div class="form-group">
+            <label for="subscriber-name" style="color: white;">الاسم</label>
+            <input type="text" id="subscriber-name" placeholder="أدخل اسمك" required>
+        </div>
 
-            <p class="f-desc">
-                شركة رائدة في مجال الثروة الداجنة ومستلزمات المزارع في مصر،
-                تسعى دائماً لرضا عملائها وتقديم أفضل المنتجات بأفضل الأسعار.
-            </p>
+        <div class="form-group">
+            <label for="subscriber-phone" style="color: white;">رقم الهاتف</label>
+            <input type="tel" id="subscriber-phone" placeholder="01xxxxxxxxx" required>
+        </div>
 
-            <div class="f-social">
-                <a href="#" class="js-facebook-link" target="_blank" rel="noopener noreferrer" title="فيسبوك" aria-label="تابعنا على فيسبوك">
-                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                </a>
-                <a href="#" class="js-whatsapp-link" target="_blank" rel="noopener noreferrer" title="واتساب" aria-label="تواصل عبر واتساب">
-                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                </a>
-            </div>
+        <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-bell"></i> اشترك الآن
+        </button>
+    </form>
+</section>
 
-            <a href="#" class="footer-facebook-text js-facebook-link" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                تابعنا على فيسبوك
+<!-- التواصل -->
+<section id="contact" class="section">
+    <div class="section-header">
+        <h2>📞 تواصل معنا</h2>
+        <p>نحن هنا لخدمتك 24/7</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto;">
+        <!-- الهاتف -->
+        <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #b81d24;">
+            <div style="font-size: 32px; margin-bottom: 15px;">📞</div>
+            <h3 style="color: #0d1b3e; margin-bottom: 15px; font-weight: 700;">أرقام الهاتف</h3>
+            <a href="tel:201001887670" style="display: block; color: #24a148; text-decoration: none; font-weight: 600; margin-bottom: 10px; transition: all 0.3s ease;">
+                <i class="fas fa-phone"></i> 01001887670
+            </a>
+            <a href="tel:201062720723" style="display: block; color: #24a148; text-decoration: none; font-weight: 600; margin-bottom: 10px; transition: all 0.3s ease;">
+                <i class="fas fa-phone"></i> 01062720723
+            </a>
+            <a href="tel:201211635266" style="display: block; color: #24a148; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-phone"></i> 01211635266
             </a>
         </div>
 
-        <div class="footer-col">
-            <h4>روابط سريعة</h4>
-            <ul>
-                <li><a href="#top">الرئيسية</a></li>
-                <li><a href="#about">من نحن</a></li>
-                <li><a href="#categories">المنتجات</a></li>
-                <li><a href="#prices">أسعار اليوم</a></li>
-                <li><a href="#order-section">الطلبيات</a></li>
-                <li><a href="#contact">تواصل معنا</a></li>
-                <li><a href="#" class="js-facebook-link" target="_blank" rel="noopener noreferrer">فيسبوك</a></li>
+        <!-- واتساب -->
+        <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #24a148;">
+            <div style="font-size: 32px; margin-bottom: 15px;">💬</div>
+            <h3 style="color: #0d1b3e; margin-bottom: 15px; font-weight: 700;">واتساب</h3>
+            <a href="https://wa.me/201070780092" target="_blank" style="display: inline-block; background: #24a148; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fab fa-whatsapp"></i> تواصل عبر واتساب
+            </a>
+        </div>
+
+        <!-- الموقع -->
+        <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #d85416;">
+            <div style="font-size: 32px; margin-bottom: 15px;">📍</div>
+            <h3 style="color: #0d1b3e; margin-bottom: 15px; font-weight: 700;">الموقع</h3>
+            <p style="color: #64748b; margin-bottom: 15px;">الشرقية - فاقوس - الديدامون - الطريق الزراعي</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=30.5136,31.2833" target="_blank" style="display: inline-block; background: #d85416; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-map-marker-alt"></i> عرض على الخريطة
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- التذييل -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>🐔 مجموعة أبو باشا</h3>
+            <p>متخصصون في توفير أفضل الدواجن والأعلاف ومستلزمات المزارع بأسعار منافسة وجودة عالية.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>الروابط السريعة</h3>
+            <ul class="footer-links">
+                <li><a href="#home"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
+                <li><a href="#categories"><i class="fas fa-chevron-left"></i> المنتجات</a></li>
+                <li><a href="#prices"><i class="fas fa-chevron-left"></i> الأسعار</a></li>
+                <li><a href="#orders"><i class="fas fa-chevron-left"></i> الطلبيات</a></li>
             </ul>
         </div>
 
-        <div class="footer-col">
-            <h4>منتجاتنا</h4>
-            <ul id="footer-categories-list"></ul>
+        <div class="footer-section">
+            <h3>التواصل</h3>
+            <div class="footer-contact">
+                <div class="contact-item">
+                    <span class="contact-icon"><i class="fas fa-phone"></i></span>
+                    <span>01001887670</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon"><i class="fab fa-whatsapp"></i></span>
+                    <span>01070780092</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <span>فاقوس - الشرقية</span>
+                </div>
+            </div>
         </div>
 
-        <div class="footer-col">
-            <h4>تواصل معنا</h4>
-
-            <ul class="contact-list-clickable" id="contact-phones-list"></ul>
-
-            <ul class="contact-list-clickable">
-                <li>
-                    <a href="#" id="google-maps-link" class="phone-link maps-hotline" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-map-location-dot"></i>
-                        <span>افتح موقعنا على خرائط Google</span>
-                    </a>
-                </li>
-
-                <li class="address-li">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>
-                        الشرقية - فاقوس - الديدامون<br>
-                        الطريق الزراعي بجوار صيدلية أبو باشا
-                    </span>
-                </li>
-            </ul>
+        <div class="footer-section">
+            <h3>ساعات العمل</h3>
+            <p>السبت - الخميس: 08:00 - 18:00</p>
+            <p>الجمعة: مغلق</p>
+            <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
+                📌 ملاحظة: أجرة التوصيل يتم الاتفاق عليها مع الدعم الفني
+            </p>
         </div>
     </div>
 
     <div class="footer-bottom">
-        <p>جميع الحقوق محفوظة © 2026 - مجموعة أبو باشا للدواجن والأعلاف</p>
+        <p>&copy; 2024 مجموعة أبو باشا. جميع الحقوق محفوظة.</p>
+        <p style="font-size: 12px; margin-top: 10px;">تم التطوير بواسطة فريق التطوير المتخصص</p>
     </div>
 </footer>
 
-<div id="product-modal" class="product-modal" aria-hidden="true">
-    <div class="product-modal-backdrop" onclick="closeProductDetails()"></div>
-
-    <div class="product-modal-card" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
-        <button type="button" class="product-modal-close" onclick="closeProductDetails()" aria-label="إغلاق">×</button>
-
-        <div id="product-modal-image" class="product-modal-image"></div>
-
-        <div class="product-modal-body">
-            <h3 id="product-modal-title"></h3>
-            <p id="product-modal-price"></p>
-            <p>للطلب أو الاستفسار عن هذا المنتج، تواصل معنا مباشرة عبر واتساب.</p>
-            <div class="product-modal-qty-row">
-                <label for="product-modal-qty">الكمية</label>
-                <input id="product-modal-qty" type="text" inputmode="numeric" placeholder="أدخل الكمية" />
-            </div>
-
-            <div class="product-modal-actions">
-                <button type="button" class="btn-prices" onclick="addProductToOrderFromModal()">
-                    إضافة للطلب
-                </button>
-
-                <a id="product-modal-whatsapp" href="#" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-whatsapp"></i>
-                    طلب عبر واتساب
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="notification-permission-box" class="notification-permission-box" hidden>
-    <div>
-        <strong>فعّل إشعارات مجموعة أبو باشا</strong>
-        <p>ليصلك تنبيه عند تحديث أحدث أسعار بورصة الكتاكيت.</p>
-    </div>
-
-    <button type="button" id="enable-notifications-btn">تفعيل الإشعارات</button>
-    <button type="button" id="dismiss-notifications-btn" aria-label="إغلاق">×</button>
+<!-- نافذة المنتج -->
+<div class="modal">
+    <div class="modal-content"></div>
 </div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
+<!-- Scripts -->
 <script src="data.js"></script>
 <script src="storage.js"></script>
 <script src="firebase.js"></script>
 <script src="app.js"></script>
+
 </body>
 </html>

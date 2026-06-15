@@ -3,350 +3,564 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="لوحة تحكم مجموعة أبو باشا — إدارة الأسعار والمنتجات">
-    <link rel="icon" href="assets/tarboosh.png" type="image/png">
-    <title>لوحة التحكم | مجموعة أبو باشا</title>
+    <meta name="description" content="لوحة تحكم مجموعة أبو باشا">
+    <meta name="theme-color" content="#0d1b3e">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d1b3e' width='100' height='100' rx='20'/><text x='50' y='75' font-size='60' text-anchor='middle' fill='white'>⚙️</text></svg>">
+    <title>لوحة التحكم - مجموعة أبو باشا</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
+    <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
 
-<div id="admin-login-screen" class="admin-login-screen">
-    <form id="admin-login-form" class="admin-login-card">
-        <img src="assets/tarboosh.png" alt="مجموعة أبو باشا" class="admin-login-logo">
-
-        <h1>تسجيل دخول الأدمن</h1>
-        <p>أدخل بيانات الدخول للوصول إلى لوحة التحكم</p>
-
-        <div class="form-group">
-            <label for="admin-username">اسم المستخدم</label>
-            <input type="text" id="admin-username" autocomplete="username" required>
-        </div>
-
-        <div class="form-group">
-            <label for="admin-password">كلمة المرور</label>
-            <input type="password" id="admin-password" autocomplete="current-password" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary admin-login-btn">
-            <i class="fas fa-lock-open"></i>
-            دخول لوحة التحكم
-        </button>
-
-        <p id="admin-login-error" class="admin-login-error"></p>
-    </form>
-</div>
-
-<div class="admin-wrapper" id="admin-panel" hidden>
-    <header class="admin-header">
-        <h1>
-            <i class="fas fa-cogs"></i>
-            لوحة التحكم — مجموعة أبو باشا
-        </h1>
-
-        <div class="header-actions">
-            <button class="btn btn-success" onclick="saveAllChanges()">
-                <i class="fas fa-cloud-upload-alt"></i>
-                حفظ ونشر للسحابة
+<!-- شريط التنقل العلوي -->
+<nav class="admin-navbar">
+    <div class="navbar-container">
+        <!-- الشعار والعنوان -->
+        <div class="navbar-brand">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
             </button>
+            <h1>🎛️ لوحة التحكم</h1>
+            <p>مجموعة أبو باشا</p>
+        </div>
 
-            <button class="btn btn-primary" onclick="exportAllData()">
+        <!-- قائمة التنقل العلوية -->
+        <ul class="navbar-menu" id="navbarMenu">
+            <li><a href="#dashboard" class="nav-link active" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i> لوحة المعلومات
+            </a></li>
+            <li><a href="#products" class="nav-link" data-tab="products">
+                <i class="fas fa-box"></i> المنتجات
+            </a></li>
+            <li><a href="#categories" class="nav-link" data-tab="categories">
+                <i class="fas fa-list"></i> الفئات
+            </a></li>
+            <li><a href="#videos" class="nav-link" data-tab="videos">
+                <i class="fas fa-video"></i> الفيديوهات
+            </a></li>
+            <li><a href="#customers" class="nav-link" data-tab="customers">
+                <i class="fas fa-users"></i> العملاء
+            </a></li>
+            <li><a href="#notifications" class="nav-link" data-tab="notifications">
+                <i class="fas fa-bell"></i> الإشعارات
+            </a></li>
+            <li><a href="#settings" class="nav-link" data-tab="settings">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a></li>
+        </ul>
+
+        <!-- أزرار الإجراءات -->
+        <div class="navbar-actions">
+            <button type="button" class="btn-icon" id="sync-btn" title="مزامنة البيانات">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button type="button" class="btn-icon" id="export-btn" title="تصدير البيانات">
                 <i class="fas fa-download"></i>
-                تصدير JSON
             </button>
-
-            <label class="btn btn-light" style="cursor:pointer;margin:0;">
+            <button type="button" class="btn-icon" id="import-btn" title="استيراد البيانات">
                 <i class="fas fa-upload"></i>
-                استيراد JSON
-                <input type="file" accept="application/json,.json" hidden onchange="importAllData(event)">
-            </label>
-
-            <button class="btn btn-warning" onclick="resetAllData()">
-                <i class="fas fa-undo"></i>
-                استعادة الافتراضي
             </button>
-
-            <a href="index.html" class="btn btn-light" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-eye"></i>
-                عرض الموقع
-            </a>
-
-            <button class="btn btn-danger" onclick="logoutAdmin()">
+            <button type="button" class="btn-icon btn-danger" id="logout-btn" title="تسجيل الخروج">
                 <i class="fas fa-sign-out-alt"></i>
-                خروج
             </button>
         </div>
-    </header>
-
-    <div class="admin-info">
-        <i class="fas fa-info-circle"></i>
-        <span>
-            اضغط <b>«حفظ ونشر للسحابة»</b> بعد أي تغيير لنشر التحديثات للزوار وإرسال إشعار تحديث الأسعار.
-        </span>
     </div>
+</nav>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="prices" type="button">
-            <i class="fas fa-tags"></i>
-            الأسعار والأصناف
-        </button>
+<!-- المحتوى الرئيسي -->
+<main class="admin-main">
+    <!-- لوحة المعلومات -->
+    <section id="dashboard-tab" class="admin-tab active">
+        <div class="tab-header">
+            <h2>📊 لوحة المعلومات</h2>
+            <p>نظرة عامة على إحصائيات الموقع</p>
+        </div>
 
-        <button class="tab-btn" data-tab="categories" type="button">
-            <i class="fas fa-layer-group"></i>
-            فئات المنتجات
-        </button>
+        <!-- الإحصائيات الرئيسية -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-icon products-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>المنتجات</h3>
+                    <p class="stat-number" id="stat-products">0</p>
+                    <p class="stat-change">↑ 5 منتجات جديدة</p>
+                </div>
+            </div>
 
-        <button class="tab-btn" data-tab="media" type="button">
-            <i class="fas fa-images"></i>
-            صور الهيرو والشعارات
-        </button>
+            <div class="stat-card">
+                <div class="stat-icon categories-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>الفئات</h3>
+                    <p class="stat-number" id="stat-categories">0</p>
+                    <p class="stat-change">↑ فئة واحدة جديدة</p>
+                </div>
+            </div>
 
-        <button class="tab-btn" data-tab="customers" type="button">
-            <i class="fas fa-users"></i>
-            العملاء
-        </button>
-    </div>
+            <div class="stat-card">
+                <div class="stat-icon customers-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>العملاء</h3>
+                    <p class="stat-number" id="stat-customers">0</p>
+                    <p class="stat-change">↑ 10 عملاء جدد</p>
+                </div>
+            </div>
 
-    <section class="tab-content active" id="tab-prices">
-        <div class="section-bar">
-            <h2>الأسعار والأصناف</h2>
+            <div class="stat-card">
+                <div class="stat-icon videos-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>الفيديوهات</h3>
+                    <p class="stat-number" id="stat-videos">0</p>
+                    <p class="stat-change">↑ فيديو واحد جديد</p>
+                </div>
+            </div>
 
-            <div class="section-bar-actions">
-                <button class="btn btn-warning" onclick="publishTodayPrices()">
-                    <i class="fas fa-calendar-day"></i>
-                    نشر أسعار اليوم
-                </button>
+            <div class="stat-card">
+                <div class="stat-icon sales-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>المبيعات اليومية</h3>
+                    <p class="stat-number">5,250 ج.م</p>
+                    <p class="stat-change positive">↑ 12% من أمس</p>
+                </div>
+            </div>
 
-                <button class="btn btn-primary" onclick="openModal('addProductModal')">
-                    <i class="fas fa-plus"></i>
-                    إضافة صنف
-                </button>
+            <div class="stat-card">
+                <div class="stat-icon orders-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>الطلبات الجديدة</h3>
+                    <p class="stat-number">24</p>
+                    <p class="stat-change positive">↑ 5 طلبات جديدة</p>
+                </div>
             </div>
         </div>
 
-        <div id="products-list" class="items-grid"></div>
+        <!-- الرسوم البيانية -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>📈 المبيعات الأسبوعية</h3>
+                <canvas id="salesChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>🏆 أفضل المنتجات</h3>
+                <canvas id="topProductsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- الطلبات الأخيرة -->
+        <div class="recent-section">
+            <h3>📋 الطلبات الأخيرة</h3>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>المبلغ</th>
+                            <th>الحالة</th>
+                            <th>التاريخ</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">
+                                لا توجد طلبات حتى الآن
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 
-    <section class="tab-content" id="tab-categories">
-        <div class="section-bar">
-            <h2>فئات المنتجات</h2>
-
-            <button class="btn btn-primary" onclick="openModal('addCategoryModal')">
-                <i class="fas fa-plus"></i>
-                إضافة فئة
+    <!-- المنتجات -->
+    <section id="products-tab" class="admin-tab">
+        <div class="tab-header">
+            <h2>📦 إدارة المنتجات</h2>
+            <button type="button" class="btn-primary" id="add-product-btn">
+                <i class="fas fa-plus"></i> إضافة منتج جديد
             </button>
         </div>
 
-        <div id="categories-list" class="items-grid"></div>
-    </section>
+        <div class="form-container" id="product-form-container" style="display: none;">
+            <h3>📝 نموذج المنتج</h3>
+            <form id="product-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-name">اسم المنتج</label>
+                        <input type="text" id="product-name" placeholder="مثال: كتكوت تسمين" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">الفئة</label>
+                        <select id="product-category" required></select>
+                    </div>
+                </div>
 
-    <section class="tab-content" id="tab-media">
-        <div class="section-bar">
-            <h2>صور الهيرو والشعارات</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">السعر (ج.م)</label>
+                        <input type="number" id="product-price" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image">الصورة</label>
+                        <input type="file" id="product-image" accept="image/*">
+                        <small style="color: #64748b;">الحد الأقصى: 5 MB</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-success">
+                        <i class="fas fa-save"></i> حفظ المنتج
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="cancelProductForm()">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <div class="media-grid">
-            <div class="media-card">
-                <h3>شعار شريط القائمة</h3>
-                <img
-                    id="media-nav-preview"
-                    class="media-preview small-round"
-                    src="https://placehold.co/80x80/0a1b35/fff?text=Logo"
-                    alt="معاينة شعار القائمة"
-                >
-                <input type="file" accept="image/*" onchange="handleMediaUpload(event, 'navLogo', 'media-nav-preview')">
-                <p class="hint">الأبعاد المثالية: 60×60 بكسل</p>
-            </div>
-
-            <div class="media-card">
-                <h3>صورة الهيرو الرئيسية</h3>
-                <img
-                    id="media-hero-preview"
-                    class="media-preview large"
-                    src="https://placehold.co/600x500/f4f7f6/1e293b?text=Hero+Image"
-                    alt="معاينة صورة الهيرو"
-                >
-                <input type="file" accept="image/*" onchange="handleMediaUpload(event, 'heroImage', 'media-hero-preview')">
-                <p class="hint">الأبعاد المثالية: 600×500 بكسل أو أكبر بنسبة مناسبة</p>
-            </div>
-
-            <div class="media-card">
-                <h3>شعار الفوتر</h3>
-                <img
-                    id="media-footer-preview"
-                    class="media-preview small-round"
-                    src="https://placehold.co/80x80/0a1b35/fff?text=Logo"
-                    alt="معاينة شعار الفوتر"
-                >
-                <input type="file" accept="image/*" onchange="handleMediaUpload(event, 'footerLogo', 'media-footer-preview')">
-                <p class="hint">الأبعاد المثالية: 60×60 بكسل</p>
-            </div>
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الفئة</th>
+                        <th>السعر</th>
+                        <th>الصورة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="products-tbody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">
+                            لا توجد منتجات - اضغط على "إضافة منتج جديد"
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 
-    <section class="tab-content" id="tab-customers">
-        <div class="section-bar">
-            <h2>قاعدة بيانات العملاء</h2>
-
-            <button class="btn btn-primary" onclick="openModal('addCustomerModal')">
-                <i class="fas fa-plus"></i>
-                إضافة عميل
+    <!-- الفئات -->
+    <section id="categories-tab" class="admin-tab">
+        <div class="tab-header">
+            <h2>📂 إدارة الفئات</h2>
+            <button type="button" class="btn-primary" id="add-category-btn">
+                <i class="fas fa-plus"></i> إضافة فئة جديدة
             </button>
         </div>
 
-        <div id="customers-list" class="items-grid"></div>
+        <div class="form-container" id="category-form-container" style="display: none;">
+            <h3>📝 نموذج الفئة</h3>
+            <form id="category-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category-name">اسم الفئة</label>
+                        <input type="text" id="category-name" placeholder="مثال: الكتاكيت" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-icon">الأيقونة (Emoji)</label>
+                        <input type="text" id="category-icon" placeholder="مثال: 🐤" maxlength="2" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-success">
+                        <i class="fas fa-save"></i> حفظ الفئة
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="cancelCategoryForm()">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الأيقونة</th>
+                        <th>عدد المنتجات</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="categories-tbody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 20px; color: #64748b;">
+                            لا توجد فئات - اضغط على "إضافة فئة جديدة"
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
-</div>
 
-<!-- Modal: Add Product -->
-<div id="addProductModal" class="modal">
-    <div class="modal-content">
-        <h2>إضافة صنف جديد</h2>
+    <!-- الفيديوهات -->
+    <section id="videos-tab" class="admin-tab">
+        <div class="tab-header">
+            <h2>🎥 إدارة الفيديوهات</h2>
+            <button type="button" class="btn-primary" id="add-video-btn">
+                <i class="fas fa-plus"></i> إضافة فيديو جديد
+            </button>
+        </div>
 
-        <form id="add-product-form">
-            <div class="form-group">
-                <label for="np-name">اسم الصنف</label>
-                <input type="text" id="np-name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="np-category">فئة الصنف</label>
-                <select id="np-category" required></select>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="np-price">السعر الحالي (ج.م)</label>
-                    <input type="number" step="0.01" id="np-price" required>
+        <div class="form-container" id="video-form-container" style="display: none;">
+            <h3>📝 نموذج الفيديو</h3>
+            <form id="video-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="video-title">عنوان الفيديو</label>
+                        <input type="text" id="video-title" placeholder="مثال: كيفية تربية الكتاكيت" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="np-prev-price">سعر أمس (ج.م)</label>
-                    <input type="number" step="0.01" id="np-prev-price" placeholder="نفس السعر إن لم يتغير">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="video-description">الوصف</label>
+                        <textarea id="video-description" rows="3" placeholder="اكتب وصف الفيديو" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="video-file">ملف الفيديو (MP4)</label>
+                        <input type="file" id="video-file" accept="video/mp4" required>
+                        <small style="color: #64748b;">الحد الأقصى: 100 MB</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-success">
+                        <i class="fas fa-save"></i> حفظ الفيديو
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="cancelVideoForm()">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>العنوان</th>
+                        <th>الوصف</th>
+                        <th>الفيديو</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="videos-tbody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 20px; color: #64748b;">
+                            لا توجد فيديوهات - اضغط على "إضافة فيديو جديد"
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- العملاء -->
+    <section id="customers-tab" class="admin-tab">
+        <div class="tab-header">
+            <h2>👥 إدارة العملاء</h2>
+            <p>قائمة العملاء المشتركين والطلبات</p>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الهاتف</th>
+                        <th>العنوان</th>
+                        <th>تاريخ الاشتراك</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="customers-tbody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">
+                            لا توجد عملاء حتى الآن
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- الإشعارات -->
+    <section id="notifications-tab" class="admin-tab">
+        <div class="tab-header">
+            <h2>🔔 إدارة الإشعارات</h2>
+            <p>إرسال إشعارات تحديث الأسعار للعملاء</p>
+        </div>
+
+        <div class="form-container">
+            <h3>📬 إرسال إشعار جديد</h3>
+            <form id="notification-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="notification-title">عنوان الإشعار</label>
+                        <input type="text" id="notification-title" placeholder="مثال: تم تحديث الأسعار" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="notification-message">رسالة الإشعار</label>
+                        <textarea id="notification-message" rows="4" placeholder="اكتب رسالة الإشعار هنا" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-success">
+                        <i class="fas fa-paper-plane"></i> إرسال الإشعار
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="notification-stats">
+            <h3>📊 إحصائيات الإشعارات</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">عدد المشتركين</span>
+                    <span class="stat-value" id="notification-subscribers">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">آخر إشعار</span>
+                    <span class="stat-value" id="last-notification-time">لم يتم إرسال</span>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="form-group">
-                <label for="np-image">صورة الصنف (اختياري)</label>
+    <!-- الإعدادات -->
+    <section id="settings-tab" class="admin-tab">
+        <div class="tab-header">
+            <h2>⚙️ الإعدادات</h2>
+            <p>إدارة إعدادات الموقع والبيانات</p>
+        </div>
 
-                <div class="upload-row">
-                    <img
-                        id="np-image-preview"
-                        class="upload-preview"
-                        src="https://placehold.co/100x100?text=صورة"
-                        alt="معاينة صورة الصنف"
-                    >
-                    <input type="file" id="np-image" accept="image/*" onchange="previewNewImage(event, 'np-image-preview', 'newProductImg')">
-                </div>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn btn-light" onclick="closeModal('addProductModal')">
-                    إلغاء
+        <div class="settings-grid">
+            <div class="settings-card">
+                <h3>📊 نقل الأسعار</h3>
+                <p>نقل أسعار اليوم إلى أسعار الأمس</p>
+                <button type="button" class="btn-warning" id="move-prices-btn">
+                    <i class="fas fa-arrow-down"></i> نقل الأسعار
                 </button>
+            </div>
 
-                <button type="submit" class="btn btn-primary">
-                    إضافة
+            <div class="settings-card">
+                <h3>☁️ مزامنة Firebase</h3>
+                <p>حفظ البيانات المحلية إلى السحابة</p>
+                <button type="button" class="btn-primary" id="sync-firebase-btn">
+                    <i class="fas fa-cloud-upload-alt"></i> مزامنة الآن
                 </button>
             </div>
+
+            <div class="settings-card">
+                <h3>📥 تصدير البيانات</h3>
+                <p>تحميل نسخة احتياطية من البيانات</p>
+                <button type="button" class="btn-primary" id="export-data-btn">
+                    <i class="fas fa-download"></i> تصدير JSON
+                </button>
+            </div>
+
+            <div class="settings-card">
+                <h3>📤 استيراد البيانات</h3>
+                <p>استعادة البيانات من نسخة احتياطية</p>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;">
+                <button type="button" class="btn-primary" id="import-data-btn">
+                    <i class="fas fa-upload"></i> استيراد JSON
+                </button>
+            </div>
+
+            <div class="settings-card">
+                <h3>🔄 استعادة الإعدادات</h3>
+                <p>إعادة تعيين البيانات إلى الحالة الافتراضية</p>
+                <button type="button" class="btn-danger" id="reset-data-btn">
+                    <i class="fas fa-redo"></i> استعادة
+                </button>
+            </div>
+
+            <div class="settings-card">
+                <h3>🗑️ حذف جميع البيانات</h3>
+                <p>حذف جميع البيانات من التخزين المحلي</p>
+                <button type="button" class="btn-danger" id="clear-storage-btn">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- نافذة تسجيل الدخول -->
+<div id="login-modal" class="modal show">
+    <div class="modal-content login-modal">
+        <div class="login-header">
+            <h2>🔐 تسجيل الدخول</h2>
+            <p>لوحة تحكم مجموعة أبو باشا</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-username">اسم المستخدم</label>
+                <input type="text" id="login-username" placeholder="أدخل اسم المستخدم" required>
+            </div>
+
+            <div class="form-group">
+                <label for="login-password">كلمة المرور</label>
+                <input type="password" id="login-password" placeholder="أدخل كلمة المرور" required>
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">
+                <i class="fas fa-sign-in-alt"></i> دخول
+            </button>
         </form>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center;">
+            <p style="font-size: 12px; color: var(--text-light); margin-bottom: 10px;">
+                💡 تلميح: استخدم بيانات الدخول الصحيحة
+            </p>
+            <p style="font-size: 11px; color: var(--text-light);">
+                ⚠️ لا تشارك بيانات الدخول مع أحد
+            </p>
+        </div>
     </div>
 </div>
-
-<!-- Modal: Add Category -->
-<div id="addCategoryModal" class="modal">
-    <div class="modal-content">
-        <h2>إضافة فئة جديدة</h2>
-
-        <form id="add-category-form">
-            <div class="form-group">
-                <label for="nc-name">اسم الفئة</label>
-                <input type="text" id="nc-name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="nc-icon">أيقونة FontAwesome</label>
-                <input type="text" id="nc-icon" value="fa-box">
-            </div>
-
-            <div class="form-group">
-                <label for="nc-image">صورة الفئة (اختياري)</label>
-
-                <div class="upload-row">
-                    <img
-                        id="nc-image-preview"
-                        class="upload-preview"
-                        src="https://placehold.co/100x100?text=صورة"
-                        alt="معاينة صورة الفئة"
-                    >
-                    <input type="file" id="nc-image" accept="image/*" onchange="previewNewImage(event, 'nc-image-preview', 'newCategoryImg')">
-                </div>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn btn-light" onclick="closeModal('addCategoryModal')">
-                    إلغاء
-                </button>
-
-                <button type="submit" class="btn btn-primary">
-                    إضافة
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal: Add Customer -->
-<div id="addCustomerModal" class="modal">
-    <div class="modal-content">
-        <h2>إضافة عميل جديد</h2>
-
-        <form id="add-customer-form">
-            <div class="form-group">
-                <label for="ncu-code">كود العميل مثل VIP004 أو رقم</label>
-                <input type="text" id="ncu-code" inputmode="text" required>
-            </div>
-
-            <div class="form-group">
-                <label for="ncu-name">اسم العميل / المزرعة</label>
-                <input type="text" id="ncu-name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="ncu-address">العنوان</label>
-                <input type="text" id="ncu-address" required>
-            </div>
-
-            <div class="form-group">
-                <label for="ncu-phone">رقم الهاتف (اختياري)</label>
-                <input type="tel" id="ncu-phone" inputmode="tel">
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn btn-light" onclick="closeModal('addCustomerModal')">
-                    إلغاء
-                </button>
-
-                <button type="submit" class="btn btn-primary">
-                    إضافة
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="toast" class="toast"></div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
+<!-- Scripts -->
 <script src="data.js"></script>
 <script src="storage.js"></script>
 <script src="firebase.js"></script>
 <script src="admin.js"></script>
+
 </body>
 </html>

@@ -1,636 +1,826 @@
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = '01070780092';
-
+// ==================== متغيرات عامة ====================
+let isLoggedIn = false;
 let adminProducts = [];
 let adminCategories = [];
-let adminMedia = {};
+let adminVideos = [];
 let adminCustomers = {};
-let newProductImg = null;
-let newCategoryImg = null;
-let savingInProgress = false;
 
-document.addEventListener('DOMContentLoaded', async () => {
-    initTabs();
-    initForms();
-
-    const canLoadAdmin = initAdminAuth();
-
-    if (canLoadAdmin) {
-        await loadAll();
-        updateCloudBadge();
-    }
+// ==================== تهيئة لوحة التحكم ====================
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎛️ تم تحميل لوحة التحكم');
+    
+    checkLoginStatus();
+    setupAdminEventListeners();
 });
 
-function initAdminAuth() {
-    const loginScreen = document.getElementById('admin-login-screen');
-    const adminPanel = document.getElementById('admin-panel');
-    const loginForm = document.getElementById('admin-login-form');
-    const errorEl = document.getElementById('admin-login-error');
-
-    if (!loginScreen || !adminPanel || !loginForm) return true;
-
-    const isLoggedIn = sessionStorage.getItem('aboBashaAdminAuth') === 'true';
-
-    if (isLoggedIn) {
-        loginScreen.style.display = 'none';
-        adminPanel.hidden = false;
-        return true;
-    }
-
-    loginScreen.style.display = 'grid';
-    adminPanel.hidden = true;
-
-    loginForm.addEventListener('submit', async event => {
-        event.preventDefault();
-
-        const username = document.getElementById('admin-username').value.trim();
-        const password = document.getElementById('admin-password').value.trim();
-
-        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-            sessionStorage.setItem('aboBashaAdminAuth', 'true');
-            loginScreen.style.display = 'none';
-            adminPanel.hidden = false;
-            errorEl.textContent = '';
-
-            await loadAll();
-            updateCloudBadge();
-        } else {
-            errorEl.textContent = 'بيانات الدخول غير صحيحة';
-        }
-    });
-
-    return false;
-}
-
-function logoutAdmin() {
-    sessionStorage.removeItem('aboBashaAdminAuth');
-    location.reload();
-}
-
-function updateCloudBadge() {
-    const header = document.querySelector('.admin-header h1');
-    if (!header || header.querySelector('.cloud-badge')) return;
-
-    const badge = document.createElement('span');
-    badge.className = 'cloud-badge';
-    badge.style.cssText = 'font-size:13px;padding:4px 10px;border-radius:6px;margin-inline-start:10px;font-weight:700;';
-
-    if (CloudStorage.isReady()) {
-        badge.textContent = '☁️ متصل بالسحابة';
-        badge.style.background = '#dcfce7';
-        badge.style.color = '#166534';
+// ==================== التحقق من تسجيل الدخول ====================
+function checkLoginStatus() {
+    const loginToken = localStorage.getItem('abobasha_admin_token');
+    
+    if (loginToken === 'admin_logged_in') {
+        isLoggedIn = true;
+        showAdminPanel();
+        loadAdminData();
     } else {
-        badge.textContent = '⚠️ تخزين محلي فقط';
-        badge.style.background = '#fef3c7';
-        badge.style.color = '#92400e';
+        isLoggedIn = false;
+        showLoginModal();
     }
-
-    header.appendChild(badge);
 }
 
-async function loadAll() {
-    if (CloudStorage.isReady()) {
-        adminProducts = await CloudStorage.getProducts();
-        adminCategories = await CloudStorage.getCategories();
-        adminMedia = await CloudStorage.getMedia();
-        adminCustomers = await CloudStorage.getCustomers();
+function showLoginModal() {
+    const modal = document.querySelector('#login-modal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+function showAdminPanel() {
+    const modal = document.querySelector('#login-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const username = document.querySelector('#login-username').value.trim();
+    const password = document.querySelector('#login-password').value.trim();
+    
+    // التحقق من بيانات الدخول
+    if (username === 'admin' && password === '01070780092') {
+        localStorage.setItem('abobasha_admin_token', 'admin_logged_in');
+        isLoggedIn = true;
+        
+        showAdminPanel();
+        loadAdminData();
+        showAdminNotification('✅ تم تسجيل الدخول بنجاح');
+        
+        document.querySelector('#login-form').reset();
     } else {
-        adminProducts = Storage.getProducts();
-        adminCategories = Storage.getCategories();
-        adminMedia = Storage.getMedia();
-        adminCustomers = Storage.getCustomers();
+        showAdminNotification('❌ بيانات غير صحيحة');
     }
-
-    adminProducts = adminProducts.map(product => ({
-        ...product,
-        categoryId: product.categoryId || guessCategoryId(product.name)
-    }));
-
-    renderProducts();
-    renderCategories();
-    renderMedia();
-    renderCustomers();
-    renderCategoryOptions();
 }
 
-function initTabs() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+function handleLogout() {
+    if (confirm('هل تريد تسجيل الخروج؟')) {
+        localStorage.removeItem('abobasha_admin_token');
+        location.reload();
+    }
+}
 
-            btn.classList.add('active');
-            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+// ==================== إعداد المستمعات ====================
+function setupAdminEventListeners() {
+    // تسجيل الدخول
+    const loginForm = document.querySelector('#login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+    
+    // تسجيل الخروج
+    const logoutBtn = document.querySelector('#logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
+    // التنقل بين التبويبات
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const tabName = e.currentTarget.getAttribute('data-tab');
+            switchTab(tabName);
         });
     });
+    
+    // المنتجات
+    const addProductBtn = document.querySelector('#add-product-btn');
+    if (addProductBtn) {
+        addProductBtn.addEventListener('click', showProductForm);
+    }
+    
+    const productForm = document.querySelector('#product-form');
+    if (productForm) {
+        productForm.addEventListener('submit', handleProductSubmit);
+    }
+    
+    // الفئات
+    const addCategoryBtn = document.querySelector('#add-category-btn');
+    if (addCategoryBtn) {
+        addCategoryBtn.addEventListener('click', showCategoryForm);
+    }
+    
+    const categoryForm = document.querySelector('#category-form');
+    if (categoryForm) {
+        categoryForm.addEventListener('submit', handleCategorySubmit);
+    }
+    
+    // الفيديوهات
+    const addVideoBtn = document.querySelector('#add-video-btn');
+    if (addVideoBtn) {
+        addVideoBtn.addEventListener('click', showVideoForm);
+    }
+    
+    const videoForm = document.querySelector('#video-form');
+    if (videoForm) {
+        videoForm.addEventListener('submit', handleVideoSubmit);
+    }
+    
+    // الإشعارات
+    const notificationForm = document.querySelector('#notification-form');
+    if (notificationForm) {
+        notificationForm.addEventListener('submit', handleNotificationSubmit);
+    }
+    
+    // الإعدادات
+    const movePricesBtn = document.querySelector('#move-prices-btn');
+    if (movePricesBtn) {
+        movePricesBtn.addEventListener('click', movePricesToYesterday);
+    }
+    
+    const exportDataBtn = document.querySelector('#export-data-btn');
+    if (exportDataBtn) {
+        exportDataBtn.addEventListener('click', exportData);
+    }
+    
+    const importDataBtn = document.querySelector('#import-data-btn');
+    if (importDataBtn) {
+        importDataBtn.addEventListener('click', () => {
+            document.querySelector('#import-file-input').click();
+        });
+    }
+    
+    const importInput = document.querySelector('#import-file-input');
+    if (importInput) {
+        importInput.addEventListener('change', handleFileImport);
+    }
+    
+    const resetDataBtn = document.querySelector('#reset-data-btn');
+    if (resetDataBtn) {
+        resetDataBtn.addEventListener('click', resetToDefaultsData);
+    }
+    
+    const clearStorageBtn = document.querySelector('#clear-storage-btn');
+    if (clearStorageBtn) {
+        clearStorageBtn.addEventListener('click', clearAllStorage);
+    }
+
+    // أزرار الأعلى
+    const syncBtn = document.querySelector('#sync-btn');
+    if (syncBtn) {
+        syncBtn.addEventListener('click', syncDataToFirebase);
+    }
+
+    const exportBtn = document.querySelector('#export-btn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportData);
+    }
+
+    const importBtn = document.querySelector('#import-btn');
+    if (importBtn) {
+        importBtn.addEventListener('click', () => {
+            document.querySelector('#import-file-input').click();
+        });
+    }
 }
 
-function renderCategoryOptions() {
-    const select = document.getElementById('np-category');
-    if (!select) return;
+// ==================== التنقل بين التبويبات ====================
+function switchTab(tabName) {
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    const selectedTab = document.querySelector(`#${tabName}-tab`);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+    }
+    
+    const activeItem = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeItem) {
+        activeItem.classList.add('active');
+    }
+    
+    if (tabName === 'dashboard') {
+        updateDashboard();
+    } else if (tabName === 'products') {
+        displayProductsTable();
+    } else if (tabName === 'categories') {
+        displayCategoriesTable();
+    } else if (tabName === 'videos') {
+        displayVideosTable();
+    } else if (tabName === 'customers') {
+        displayCustomersTable();
+    } else if (tabName === 'notifications') {
+        updateNotificationStats();
+    }
+}
 
-    select.innerHTML = adminCategories.map(category => `
-        <option value="${escAttr(category.id)}">${escHtml(category.name)}</option>
+// ==================== لوحة المعلومات ====================
+function updateDashboard() {
+    document.querySelector('#stat-products').textContent = toArabicDigits(adminProducts.length);
+    document.querySelector('#stat-categories').textContent = toArabicDigits(adminCategories.length);
+    document.querySelector('#stat-customers').textContent = toArabicDigits(Object.keys(adminCustomers).length);
+    document.querySelector('#stat-videos').textContent = toArabicDigits(adminVideos.length);
+}
+
+// ==================== المنتجات ====================
+function showProductForm() {
+    const container = document.querySelector('#product-form-container');
+    if (container) {
+        container.style.display = 'block';
+        document.querySelector('#product-form').reset();
+        
+        const categorySelect = document.querySelector('#product-category');
+        categorySelect.innerHTML = adminCategories.map(cat => 
+            `<option value="${cat.id}">${cat.name}</option>`
+        ).join('');
+    }
+}
+
+function cancelProductForm() {
+    const container = document.querySelector('#product-form-container');
+    if (container) {
+        container.style.display = 'none';
+    }
+}
+
+function handleProductSubmit(e) {
+    e.preventDefault();
+    
+    const name = document.querySelector('#product-name').value.trim();
+    const categoryId = document.querySelector('#product-category').value;
+    const price = parseFloat(document.querySelector('#product-price').value);
+    const imageFile = document.querySelector('#product-image').files[0];
+    
+    if (!name || !categoryId || !price) {
+        showAdminNotification('⚠️ أدخل جميع البيانات');
+        return;
+    }
+    
+    let imageUrl = '';
+    
+    if (imageFile) {
+        // تحويل الصورة إلى Base64
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            imageUrl = event.target.result;
+            createProduct(name, categoryId, price, imageUrl);
+        };
+        reader.readAsDataURL(imageFile);
+    } else {
+        createProduct(name, categoryId, price, imageUrl);
+    }
+}
+
+function createProduct(name, categoryId, price, imageUrl) {
+    const product = {
+        id: `product_${Date.now()}`,
+        name: name,
+        categoryId: categoryId,
+        price: price,
+        previousPrice: price,
+        image: imageUrl
+    };
+    
+    adminProducts.push(product);
+    saveProducts(adminProducts);
+    
+    cancelProductForm();
+    displayProductsTable();
+    showAdminNotification('✅ تم إضافة المنتج');
+    
+    // إرسال إشعار للعملاء
+    sendNotificationToAll('تم إضافة منتج جديد', `تم إضافة ${name} إلى قائمة المنتجات`);
+}
+
+function displayProductsTable() {
+    const tbody = document.querySelector('#products-tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = adminProducts.map(product => `
+        <tr>
+            <td>${product.name}</td>
+            <td>${getCategoryName(product.categoryId)}</td>
+            <td>${toArabicDigits(product.price.toFixed(2))} ج.م</td>
+            <td>${product.image ? '✅' : '❌'}</td>
+            <td>
+                <button class="btn-sm btn-primary" onclick="editProduct('${product.id}')">تعديل</button>
+                <button class="btn-sm btn-danger" onclick="deleteProduct('${product.id}')">حذف</button>
+            </td>
+        </tr>
     `).join('');
 }
 
-function renderProducts() {
-    const list = document.getElementById('products-list');
-    if (!list) return;
-
-    list.innerHTML = '';
-
-    if (!adminProducts.length) {
-        list.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px;">لا توجد أصناف.</p>';
-        return;
+function editProduct(productId) {
+    const product = adminProducts.find(p => p.id === productId);
+    if (!product) return;
+    
+    document.querySelector('#product-name').value = product.name;
+    document.querySelector('#product-category').value = product.categoryId;
+    document.querySelector('#product-price').value = product.price;
+    
+    const container = document.querySelector('#product-form-container');
+    if (container) {
+        container.style.display = 'block';
     }
-
-    adminProducts.forEach((product, index) => {
-        const imgSrc = safeImageSrc(product.image) || 'https://placehold.co/110x90/f8fafc/64748b?text=بدون+صورة';
-
-        const categoryOptions = adminCategories.map(category => `
-            <option value="${escAttr(category.id)}" ${String(product.categoryId) === String(category.id) ? 'selected' : ''}>
-                ${escHtml(category.name)}
-            </option>
-        `).join('');
-
-        const div = document.createElement('div');
-        div.className = 'item-card product';
-
-        div.innerHTML = `
-            <div class="img-cell">
-                <img class="thumb" src="${escAttr(imgSrc)}" id="prod-img-${index}" alt="">
-                <input type="file" accept="image/*" onchange="handleProductImage(event, ${index})">
-            </div>
-
-            <div>
-                <label>اسم الصنف</label>
-                <input type="text" value="${escHtml(product.name)}" onchange="updateProductField(${index}, 'name', this.value)">
-            </div>
-
-            <div>
-                <label>الفئة</label>
-                <select onchange="updateProductField(${index}, 'categoryId', this.value)">
-                    ${categoryOptions}
-                </select>
-            </div>
-
-            <div>
-                <label>السعر الحالي</label>
-                <input type="number" step="0.01" value="${Number(product.price) || 0}" onchange="updateProductField(${index}, 'price', this.value)">
-            </div>
-
-            <div>
-                <label>سعر أمس</label>
-                <input type="number" step="0.01" value="${Number(product.previousPrice ?? product.price) || 0}" onchange="updateProductField(${index}, 'previousPrice', this.value)">
-            </div>
-
-            <div>
-                <button class="btn btn-danger" onclick="deleteProduct(${index})" aria-label="حذف الصنف">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        `;
-
-        list.appendChild(div);
-    });
-}
-
-function updateProductField(index, field, value) {
-    if (field === 'price' || field === 'previousPrice') {
-        adminProducts[index][field] = parseFloat(value) || 0;
-    } else {
-        adminProducts[index][field] = value;
-    }
-}
-
-async function handleProductImage(event, index) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    try {
-        const dataUrl = await ImageUtils.fileToBase64(file, { maxWidth: 700, maxSizeKB: 230 });
-        adminProducts[index].image = dataUrl;
-        document.getElementById(`prod-img-${index}`).src = dataUrl;
-        showToast('✅ تم تحديث الصورة — اضغط حفظ ونشر للسحابة');
-    } catch {
-        showToast('⚠️ فشل تحميل الصورة');
-    }
-}
-
-function deleteProduct(index) {
-    if (!confirm('حذف هذا الصنف؟')) return;
-    adminProducts.splice(index, 1);
-    renderProducts();
-}
-
-function publishTodayPrices() {
-    if (!adminProducts.length) return showToast('⚠️ لا توجد أصناف لنشر أسعارها');
-
-    if (!confirm('سيتم نقل الأسعار الحالية إلى «سعر أمس» لكل الأصناف. تابع؟')) return;
-
-    adminProducts.forEach(product => {
-        product.previousPrice = Number(product.price) || 0;
-    });
-
-    renderProducts();
-    showToast('✅ تم نقل الأسعار الحالية إلى سعر أمس');
-}
-
-function renderCategories() {
-    const list = document.getElementById('categories-list');
-    if (!list) return;
-
-    list.innerHTML = '';
-
-    if (!adminCategories.length) {
-        list.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px;">لا توجد فئات.</p>';
-        return;
-    }
-
-    adminCategories.forEach((category, index) => {
-        const imgSrc = safeImageSrc(category.image) || 'https://placehold.co/110x90/f8fafc/64748b?text=بدون+صورة';
-
-        const div = document.createElement('div');
-        div.className = 'item-card category';
-
-        div.innerHTML = `
-            <div class="img-cell">
-                <img class="thumb" src="${escAttr(imgSrc)}" id="cat-img-${index}" alt="">
-                <input type="file" accept="image/*" onchange="handleCategoryImage(event, ${index})">
-            </div>
-
-            <div>
-                <label>اسم الفئة</label>
-                <input type="text" value="${escHtml(category.name)}" onchange="updateCategoryField(${index}, 'name', this.value)">
-            </div>
-
-            <div>
-                <label>أيقونة</label>
-                <input type="text" value="${escHtml(category.icon)}" onchange="updateCategoryField(${index}, 'icon', this.value)">
-            </div>
-
-            <div>
-                <button class="btn btn-danger" onclick="deleteCategory(${index})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        `;
-
-        list.appendChild(div);
-    });
-
-    renderCategoryOptions();
-}
-
-function updateCategoryField(index, field, value) {
-    adminCategories[index][field] = value;
-    renderCategoryOptions();
-}
-
-async function handleCategoryImage(event, index) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    try {
-        const dataUrl = await ImageUtils.fileToBase64(file, { maxWidth: 600, maxSizeKB: 200 });
-        adminCategories[index].image = dataUrl;
-        document.getElementById(`cat-img-${index}`).src = dataUrl;
-        showToast('✅ تم تحديث الصورة — اضغط حفظ ونشر للسحابة');
-    } catch {
-        showToast('⚠️ فشل تحميل الصورة');
-    }
-}
-
-function deleteCategory(index) {
-    if (!confirm('حذف هذه الفئة؟')) return;
-
-    const deletedId = adminCategories[index].id;
-    adminCategories.splice(index, 1);
-
-    adminProducts = adminProducts.map(product => {
-        if (product.categoryId === deletedId) {
-            return { ...product, categoryId: adminCategories[0]?.id || 'c1' };
+    
+    // تحديث الزر
+    const form = document.querySelector('#product-form');
+    const oldOnSubmit = form.onsubmit;
+    
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        
+        const name = document.querySelector('#product-name').value.trim();
+        const categoryId = document.querySelector('#product-category').value;
+        const price = parseFloat(document.querySelector('#product-price').value);
+        const imageFile = document.querySelector('#product-image').files[0];
+        
+        if (!name || !categoryId || !price) {
+            showAdminNotification('⚠️ أدخل جميع البيانات');
+            return;
         }
-
-        return product;
-    });
-
-    renderCategories();
-    renderProducts();
-}
-
-function renderMedia() {
-    const set = (id, src, fallback) => {
-        const el = document.getElementById(id);
-        if (el) el.src = safeImageSrc(src) || fallback;
+        
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const imageUrl = event.target.result;
+                updateProductData(productId, { name, categoryId, price, image: imageUrl });
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+            updateProductData(productId, { name, categoryId, price });
+        }
     };
-
-    set('media-nav-preview', adminMedia.navLogo, 'https://placehold.co/80x80/0a1b35/fff?text=Logo');
-    set('media-hero-preview', adminMedia.heroImage, 'https://placehold.co/600x500/f4f7f6/1e293b?text=Hero+Image');
-    set('media-footer-preview', adminMedia.footerLogo, 'https://placehold.co/80x80/0a1b35/fff?text=Logo');
 }
 
-async function handleMediaUpload(event, key, previewId) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const options = key === 'heroImage'
-        ? { maxWidth: 1400, maxSizeKB: 380 }
-        : { maxWidth: 350, maxSizeKB: 140 };
-
-    try {
-        const dataUrl = await ImageUtils.fileToBase64(file, options);
-        adminMedia[key] = dataUrl;
-        document.getElementById(previewId).src = dataUrl;
-        showToast('✅ تم تحديث الصورة — اضغط حفظ ونشر للسحابة');
-    } catch {
-        showToast('⚠️ فشل تحميل الصورة');
+function updateProductData(productId, updates) {
+    const index = adminProducts.findIndex(p => p.id === productId);
+    if (index !== -1) {
+        adminProducts[index] = { ...adminProducts[index], ...updates };
+        saveProducts(adminProducts);
+        
+        cancelProductForm();
+        displayProductsTable();
+        showAdminNotification('✅ تم تحديث المنتج');
+        
+        // إرسال إشعار للعملاء
+        sendNotificationToAll('تم تحديث الأسعار', 'تم تحديث أسعار مجموعة أبو باشا. انقر للاطلاع على آخر الأسعار');
+        
+        // استعادة الدالة الأصلية
+        const form = document.querySelector('#product-form');
+        form.onsubmit = handleProductSubmit;
     }
 }
 
-function renderCustomers() {
-    const list = document.getElementById('customers-list');
-    if (!list) return;
+function deleteProduct(productId) {
+    if (confirm('هل تريد حذف هذا المنتج؟')) {
+        adminProducts = adminProducts.filter(p => p.id !== productId);
+        saveProducts(adminProducts);
+        displayProductsTable();
+        showAdminNotification('✅ تم حذف المنتج');
+    }
+}
 
-    list.innerHTML = '';
+// ==================== الفئات ====================
+function showCategoryForm() {
+    const container = document.querySelector('#category-form-container');
+    if (container) {
+        container.style.display = 'block';
+        document.querySelector('#category-form').reset();
+    }
+}
 
-    const entries = Object.entries(adminCustomers);
+function cancelCategoryForm() {
+    const container = document.querySelector('#category-form-container');
+    if (container) {
+        container.style.display = 'none';
+    }
+}
 
-    if (!entries.length) {
-        list.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px;">لا يوجد عملاء.</p>';
+function handleCategorySubmit(e) {
+    e.preventDefault();
+    
+    const name = document.querySelector('#category-name').value.trim();
+    const icon = document.querySelector('#category-icon').value.trim();
+    
+    if (!name || !icon) {
+        showAdminNotification('⚠️ أدخل جميع البيانات');
         return;
     }
-
-    entries.forEach(([code, customer]) => {
-        const codeJs = JSON.stringify(code);
-
-        const div = document.createElement('div');
-        div.className = 'item-card customer';
-
-        div.innerHTML = `
-            <div>
-                <label>الكود</label>
-                <input type="text" value="${escHtml(code)}" disabled style="background:#f1f5f9;">
-            </div>
-
-            <div>
-                <label>الاسم</label>
-                <input type="text" value="${escHtml(customer.name)}" onchange="updateCustomerField(${codeJs}, 'name', this.value)">
-            </div>
-
-            <div>
-                <label>العنوان</label>
-                <input type="text" value="${escHtml(customer.address)}" onchange="updateCustomerField(${codeJs}, 'address', this.value)">
-            </div>
-
-            <div>
-                <label>الهاتف</label>
-                <input type="tel" value="${escHtml(customer.phone || '')}" onchange="updateCustomerField(${codeJs}, 'phone', this.value)">
-            </div>
-
-            <div>
-                <button type="button" class="btn btn-danger" onclick="deleteCustomer(${codeJs})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        `;
-
-        list.appendChild(div);
-    });
-}
-
-function updateCustomerField(code, field, value) {
-    adminCustomers[code][field] = value;
-}
-
-function deleteCustomer(code) {
-    if (!confirm(`حذف العميل ${code}؟`)) return;
-    delete adminCustomers[code];
-    renderCustomers();
-}
-
-function openModal(id) {
-    document.getElementById(id).classList.add('show');
-    renderCategoryOptions();
-}
-
-function closeModal(id) {
-    document.getElementById(id).classList.remove('show');
-
-    const form = document.querySelector(`#${id} form`);
-    if (form) form.reset();
-
-    if (id === 'addProductModal') {
-        newProductImg = null;
-        document.getElementById('np-image-preview').src = 'https://placehold.co/100x100?text=صورة';
-    }
-
-    if (id === 'addCategoryModal') {
-        newCategoryImg = null;
-        document.getElementById('nc-image-preview').src = 'https://placehold.co/100x100?text=صورة';
-    }
-}
-
-async function previewNewImage(event, previewId, holder) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    try {
-        const dataUrl = await ImageUtils.fileToBase64(file, { maxWidth: 800, maxSizeKB: 260 });
-        document.getElementById(previewId).src = dataUrl;
-
-        if (holder === 'newProductImg') newProductImg = dataUrl;
-        if (holder === 'newCategoryImg') newCategoryImg = dataUrl;
-    } catch {
-        showToast('⚠️ فشل تحميل الصورة');
-    }
-}
-
-function initForms() {
-    document.getElementById('add-product-form')?.addEventListener('submit', event => {
-        event.preventDefault();
-
-        const price = parseFloat(document.getElementById('np-price').value) || 0;
-        const previousPrice = parseFloat(document.getElementById('np-prev-price').value) || price;
-        const categoryId = document.getElementById('np-category')?.value || adminCategories[0]?.id || 'c1';
-
-        adminProducts.push({
-            id: Date.now().toString(),
-            name: document.getElementById('np-name').value.trim(),
-            categoryId,
-            price,
-            previousPrice,
-            image: newProductImg || ''
-        });
-
-        renderProducts();
-        closeModal('addProductModal');
-        showToast('✅ تمت إضافة الصنف — اضغط حفظ ونشر للسحابة');
-    });
-
-    document.getElementById('add-category-form')?.addEventListener('submit', event => {
-        event.preventDefault();
-
-        adminCategories.push({
-            id: 'c' + Date.now(),
-            name: document.getElementById('nc-name').value.trim(),
-            icon: document.getElementById('nc-icon').value.trim() || 'fa-box',
-            image: newCategoryImg || ''
-        });
-
-        renderCategories();
-        closeModal('addCategoryModal');
-        showToast('✅ تمت إضافة الفئة — اضغط حفظ ونشر للسحابة');
-    });
-
-    document.getElementById('add-customer-form')?.addEventListener('submit', event => {
-        event.preventDefault();
-
-        const code = toEnglishDigits(document.getElementById('ncu-code').value.trim()).toUpperCase();
-
-        if (!code) return showToast('⚠️ أدخل الكود');
-        if (adminCustomers[code]) return showToast('⚠️ الكود موجود بالفعل');
-
-        adminCustomers[code] = {
-            name: document.getElementById('ncu-name').value.trim(),
-            address: document.getElementById('ncu-address').value.trim(),
-            phone: toEnglishDigits(document.getElementById('ncu-phone').value.trim())
-        };
-
-        renderCustomers();
-        closeModal('addCustomerModal');
-        showToast('✅ تمت إضافة العميل — اضغط حفظ ونشر للسحابة');
-    });
-
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', event => {
-            if (event.target === modal) closeModal(modal.id);
-        });
-    });
-}
-
-async function saveAllChanges() {
-    if (savingInProgress) return;
-
-    savingInProgress = true;
-    showToast('⏳ جاري الحفظ والنشر...');
-
-    let ok = false;
-
-    if (CloudStorage.isReady()) {
-        const results = await Promise.all([
-            CloudStorage.setProducts(adminProducts),
-            CloudStorage.setCategories(adminCategories),
-            CloudStorage.setMedia(adminMedia),
-            CloudStorage.setCustomers(adminCustomers)
-        ]);
-
-        ok = results.every(result => result === true);
-
-        if (ok) {
-            Storage.setProducts(adminProducts);
-            Storage.setCategories(adminCategories);
-            Storage.setMedia(adminMedia);
-            Storage.setCustomers(adminCustomers);
-
-            if (typeof CloudStorage.setPriceUpdateNotice === 'function') {
-                await CloudStorage.setPriceUpdateNotice();
-            }
-        }
-    } else {
-        ok =
-            Storage.setProducts(adminProducts) &&
-            Storage.setCategories(adminCategories) &&
-            Storage.setMedia(adminMedia) &&
-            Storage.setCustomers(adminCustomers);
-    }
-
-    savingInProgress = false;
-
-    showToast(
-        ok
-            ? '✅ تم الحفظ والنشر وإرسال إشعار تحديث الأسعار'
-            : '⚠️ فشل الحفظ'
-    );
-}
-
-async function resetAllData() {
-    if (!confirm('سيتم حذف كل التعديلات وإعادة الإعدادات الافتراضية. متأكد؟')) return;
-
-    if (CloudStorage.isReady()) {
-        await CloudStorage.resetAll();
-    }
-
-    Storage.resetAll();
-    await loadAll();
-
-    showToast('✅ تمت استعادة الإعدادات الافتراضية');
-}
-
-function exportAllData() {
-    const payload = {
-        products: adminProducts,
-        categories: adminCategories,
-        media: adminMedia,
-        customers: adminCustomers,
-        exportedAt: new Date().toISOString()
+    
+    const category = {
+        id: `category_${Date.now()}`,
+        name: name,
+        icon: icon
     };
-
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const link = document.createElement('a');
-
-    link.href = URL.createObjectURL(blob);
-    link.download = `abo-basha-backup-${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-    showToast('✅ تم تصدير البيانات');
+    
+    adminCategories.push(category);
+    saveCategories(adminCategories);
+    
+    cancelCategoryForm();
+    displayCategoriesTable();
+    showAdminNotification('✅ تم إضافة الفئة');
 }
 
-function importAllData(event) {
-    const file = event.target.files && event.target.files[0];
-    if (!file) return;
+function displayCategoriesTable() {
+    const tbody = document.querySelector('#categories-tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = adminCategories.map(category => `
+        <tr>
+            <td>${category.name}</td>
+            <td>${category.icon}</td>
+            <td>
+                <button class="btn-sm btn-danger" onclick="deleteCategory('${category.id}')">حذف</button>
+            </td>
+        </tr>
+    `).join('');
+}
 
+function deleteCategory(categoryId) {
+    if (confirm('هل تريد حذف هذه الفئة؟')) {
+        adminCategories = adminCategories.filter(c => c.id !== categoryId);
+        saveCategories(adminCategories);
+        displayCategoriesTable();
+        showAdminNotification('✅ تم حذف الفئة');
+    }
+}
+
+// ==================== الفيديوهات ====================
+function showVideoForm() {
+    const container = document.querySelector('#video-form-container');
+    if (container) {
+        container.style.display = 'block';
+        document.querySelector('#video-form').reset();
+    }
+}
+
+function cancelVideoForm() {
+    const container = document.querySelector('#video-form-container');
+    if (container) {
+        container.style.display = 'none';
+    }
+}
+
+function handleVideoSubmit(e) {
+    e.preventDefault();
+    
+    const title = document.querySelector('#video-title').value.trim();
+    const description = document.querySelector('#video-description').value.trim();
+    const videoFile = document.querySelector('#video-file').files[0];
+    
+    if (!title || !description || !videoFile) {
+        showAdminNotification('⚠️ أدخل جميع البيانات');
+        return;
+    }
+    
+    // التحقق من نوع الملف
+    if (!videoFile.type.startsWith('video/')) {
+        showAdminNotification('❌ الملف يجب أن يكون فيديو');
+        return;
+    }
+    
+    // التحقق من حجم الملف (أقصى 100 MB)
+    if (videoFile.size > 100 * 1024 * 1024) {
+        showAdminNotification('❌ حجم الفيديو كبير جداً (أقصى 100 MB)');
+        return;
+    }
+    
+    showAdminNotification('📤 جاري رفع الفيديو...');
+    
+    // تحويل الفيديو إلى Base64
     const reader = new FileReader();
+    reader.onload = (event) => {
+        const videoUrl = event.target.result;
+        
+        const video = {
+            id: `video_${Date.now()}`,
+            title: title,
+            description: description,
+            videoUrl: videoUrl
+        };
+        
+        adminVideos.push(video);
+        saveVideos(adminVideos);
+        
+        cancelVideoForm();
+        displayVideosTable();
+        showAdminNotification('✅ تم إضافة الفيديو');
+    };
+    
+    reader.onerror = () => {
+        showAdminNotification('❌ خطأ في قراءة الفيديو');
+    };
+    
+    reader.readAsDataURL(videoFile);
+}
 
-    reader.onload = () => {
+function displayVideosTable() {
+    const tbody = document.querySelector('#videos-tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = adminVideos.map(video => `
+        <tr>
+            <td>${video.title}</td>
+            <td>${video.description.substring(0, 50)}...</td>
+            <td><button class="btn-sm btn-primary" onclick="previewVideo('${video.id}')">عرض</button></td>
+            <td>
+                <button class="btn-sm btn-danger" onclick="deleteVideo('${video.id}')">حذف</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function previewVideo(videoId) {
+    const video = adminVideos.find(v => v.id === videoId);
+    if (!video) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal show';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>${video.title}</h2>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <video width="100%" controls style="border-radius: 8px;">
+                    <source src="${video.videoUrl}" type="video/mp4">
+                    متصفحك لا يدعم الفيديو
+                </video>
+                <p style="margin-top: 15px; color: #64748b;">${video.description}</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+function deleteVideo(videoId) {
+    if (confirm('هل تريد حذف هذا الفيديو؟')) {
+        adminVideos = adminVideos.filter(v => v.id !== videoId);
+        saveVideos(adminVideos);
+        displayVideosTable();
+        showAdminNotification('✅ تم حذف الفيديو');
+    }
+}
+
+// ==================== العملاء ====================
+function displayCustomersTable() {
+    const tbody = document.querySelector('#customers-tbody');
+    if (!tbody) return;
+    
+    const customers = Object.entries(adminCustomers).map(([id, customer]) => ({
+        id,
+        ...customer
+    }));
+    
+    if (customers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">لا توجد عملاء</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = customers.map(customer => `
+        <tr>
+            <td>${customer.name}</td>
+            <td>${customer.phone}</td>
+            <td>${customer.address || '-'}</td>
+            <td>${formatDateArabic(customer.subscribedAt)}</td>
+            <td>
+                <button class="btn-sm btn-danger" onclick="deleteCustomerData('${customer.id}')">حذف</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deleteCustomerData(customerId) {
+    if (confirm('هل تريد حذف هذا العميل؟')) {
+        delete adminCustomers[customerId];
+        saveCustomers(adminCustomers);
+        displayCustomersTable();
+        showAdminNotification('✅ تم حذف العميل');
+    }
+}
+
+// ==================== الإشعارات ====================
+function handleNotificationSubmit(e) {
+    e.preventDefault();
+    
+    const title = document.querySelector('#notification-title').value.trim();
+    const message = document.querySelector('#notification-message').value.trim();
+    
+    if (!title || !message) {
+        showAdminNotification('⚠️ أدخل العنوان والرسالة');
+        return;
+    }
+    
+    // إرسال الإشعار
+    sendNotificationToAll(title, message);
+    
+    // حفظ آخر إشعار
+    localStorage.setItem('abobasha_last_notification', JSON.stringify({
+        title: title,
+        message: message,
+        timestamp: new Date().toISOString()
+    }));
+    
+    document.querySelector('#notification-form').reset();
+    updateNotificationStats();
+    showAdminNotification('✅ تم إرسال الإشعار');
+}
+
+function updateNotificationStats() {
+    const subscribersCount = Object.keys(adminCustomers).length;
+    document.querySelector('#notification-subscribers').textContent = toArabicDigits(subscribersCount);
+    
+    const lastNotification = localStorage.getItem('abobasha_last_notification');
+    if (lastNotification) {
+        const data = JSON.parse(lastNotification);
+        document.querySelector('#last-notification-time').textContent = formatDateArabic(data.timestamp);
+    } else {
+        document.querySelector('#last-notification-time').textContent = 'لم يتم إرسال';
+    }
+}
+
+// ==================== الإعدادات ====================
+function movePricesToYesterday() {
+    if (confirm('هل تريد نقل الأسعار الحالية إلى أسعار الأمس؟')) {
+        adminProducts.forEach(product => {
+            product.previousPrice = product.price;
+        });
+        saveProducts(adminProducts);
+        showAdminNotification('✅ تم نقل الأسعار');
+    }
+}
+
+function exportData() {
+    const data = exportAllData();
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `abobasha_backup_${Date.now()}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    showAdminNotification('✅ تم تصدير البيانات');
+}
+
+function handleFileImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
         try {
-            const data = JSON.parse(reader.result);
-
-            if (Array.isArray(data.products)) adminProducts = data.products;
-            if (Array.isArray(data.categories)) adminCategories = data.categories;
-            if (data.media && typeof data.media === 'object') adminMedia = data.media;
-            if (data.customers && typeof data.customers === 'object') adminCustomers = data.customers;
-
-            renderProducts();
-            renderCategories();
-            renderMedia();
-            renderCustomers();
-            renderCategoryOptions();
-
-            showToast('✅ تم الاستيراد — اضغط حفظ ونشر للسحابة');
-        } catch {
-            showToast('⚠️ ملف JSON غير صالح');
+            const data = JSON.parse(event.target.result);
+            
+            if (confirm('هل تريد استيراد هذه البيانات؟ سيتم استبدال جميع البيانات الحالية.')) {
+                importAllData(data);
+                loadAdminData();
+                showAdminNotification('✅ تم استيراد البيانات');
+            }
+        } catch (error) {
+            showAdminNotification('❌ خطأ في الملف - تأكد من أنه ملف JSON صحيح');
+            console.error(error);
         }
     };
-
-    reader.onerror = () => showToast('⚠️ فشل قراءة الملف');
     reader.readAsText(file);
-    event.target.value = '';
 }
 
-function esc(value) {
-    return escHtml(value);
+function resetToDefaultsData() {
+    if (confirm('هل تريد استعادة الإعدادات الافتراضية؟ سيتم حذف جميع البيانات المخصصة.')) {
+        resetToDefaults();
+        loadAdminData();
+        showAdminNotification('✅ تم استعادة الإعدادات الافتراضية');
+    }
 }
 
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-
-    toast.textContent = message;
-    toast.classList.add('show');
-
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+function clearAllStorage() {
+    if (confirm('هل تريد حذف جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+        adminProducts = [];
+        adminCategories = [];
+        adminVideos = [];
+        adminCustomers = {};
+        
+        saveProducts(adminProducts);
+        saveCategories(adminCategories);
+        saveVideos(adminVideos);
+        saveCustomers(adminCustomers);
+        
+        updateDashboard();
+        showAdminNotification('✅ تم حذف جميع البيانات');
+    }
 }
+
+// ==================== مزامنة Firebase ====================
+function syncDataToFirebase() {
+    showAdminNotification('📤 جاري المزامنة...');
+    
+    try {
+        if (firebaseInitialized && firebaseDb) {
+            const data = exportAllData();
+            const dbRef = firebaseDb.ref('appData');
+            
+            dbRef.set(data).then(() => {
+                showAdminNotification('✅ تم مزامنة البيانات مع Firebase');
+            }).catch(error => {
+                showAdminNotification('❌ خطأ في المزامنة: ' + error.message);
+                console.error(error);
+            });
+        } else {
+            showAdminNotification('⚠️ Firebase غير متصل');
+        }
+    } catch (error) {
+        showAdminNotification('❌ خطأ في المزامنة');
+        console.error(error);
+    }
+}
+
+// ==================== حفظ وتحميل البيانات ====================
+function loadAdminData() {
+    adminProducts = getProducts();
+    adminCategories = getCategories();
+    adminVideos = getVideos();
+    adminCustomers = getCustomers();
+    
+    updateDashboard();
+    updateNotificationStats();
+}
+
+// ==================== الإشعارات ====================
+function showAdminNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'toast-notification show';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// ==================== دوال مساعدة ====================
+function toArabicDigits(num) {
+    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return String(num).replace(/\d/g, d => arabicNumbers[d]);
+}
+
+function getCategoryName(categoryId) {
+    const category = adminCategories.find(c => c.id === categoryId);
+    return category ? category.name : 'غير محدد';
+}
+
+function formatDateArabic(date) {
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return new Date(date).toLocaleDateString('ar-EG', options);
+}
+
+// ==================== إرسال الإشعارات ====================
+function sendNotificationToAll(title, message) {
+    try {
+        // إرسال إشعار محلي
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, {
+                body: message,
+                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="75" font-size="75">🐔</text></svg>',
+                badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="75" font-size="75">🐔</text></svg>'
+            });
+        }
+        
+        // حفظ الإشعار في localStorage
+        const notifications = JSON.parse(localStorage.getItem('abobasha_notifications') || '[]');
+        notifications.push({
+            title: title,
+            message: message,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('abobasha_notifications', JSON.stringify(notifications));
+        
+        console.log('✅ تم إرسال الإشعار');
+    } catch (error) {
+        console.error('❌ خطأ في إرسال الإشعار:', error);
+    }
+}
+
+console.log('✅ تم تحميل admin.js');
