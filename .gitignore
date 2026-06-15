@@ -16,3 +16,9 @@ desktop.ini
 # Optional local overrides (never commit secrets)
 .env
 .env.local
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
